@@ -1,7 +1,8 @@
 #include "globals.hpp"
 #include "selection.hpp"
 #include "lib/opcontrol.hpp"
-#include "lib/autoncontrol.hpp"
+#include "lib/autonomous.hpp"
+#include "route/route.hpp"
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -12,9 +13,14 @@
 void initialize() {
 	cout << "BEGIN INITIALIZE\n";
 	pros::lcd::initialize();
-	pros::lcd::print(1, "%f\n", time());
 	sens::reset();
 	selectorInit();
+
+    flmotor.set_encoder_units(pros::E_MOTOR_ENCODER_ROTATIONS);
+    frmotor.set_encoder_units(pros::E_MOTOR_ENCODER_ROTATIONS);
+    rlmotor.set_encoder_units(pros::E_MOTOR_ENCODER_ROTATIONS);
+    rrmotor.set_encoder_units(pros::E_MOTOR_ENCODER_ROTATIONS);
+    // autonomous();
 }
 
 /**
@@ -52,8 +58,9 @@ void competition_initialize() {
  */
 void autonomous() {
 	cout << "BEGIN AUTONOMOUS\n";
+    autonSelection = RED_1;
 	switch (autonSelection) {
-		case RED_1: {/*insert auton function*/ break;}
+		case RED_1: {route_1(); break;}
 		case BLUE_1: {/*insert auton function*/ break;}
 		case RED_2: {/*insert auton function*/ break;}
 		case BLUE_2: {/*insert auton function*/ break;}

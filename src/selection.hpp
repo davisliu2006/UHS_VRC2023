@@ -1,5 +1,4 @@
-#ifndef SELECTION_H
-#define SELECTION_H
+#pragma once
 
 #include "globals.hpp"
 
@@ -93,5 +92,3 @@ inline void selectorInit() {
 	lv_obj_set_pos(skillsBtn, 0, 100);
 	lv_obj_align(skillsBtn, NULL, LV_ALIGN_CENTER, 0, 0);
 }
-
-#endif

@@ -1,0 +1,51 @@
+--------------------
+
+ROTATIONS (*IMPORTANT)
+(different VEX compenents consider different directions as positive)
+
+Drivetrain: right = positive
+Motor: left = positive
+
+--------------------
+
+PORTS
+
+11    01
+12    02
+13    03
+14    04
+15    05
+
+16    06
+17    07
+18    08
+19    09
+20    10
+
+21
+
+(setup is temporary)
+Drivetrain: 07, 08, 09, 10
+Radio: 2
+Intake: 06
+Shooter Indexer: 05
+Shooter Flywheel: 03, 04
+Expansion: 
+
+--------------------
+
+FIELD
+(mostly for autonomous tracking)
+
+1tile = 2ft
+Field Size: 6tile*6tile = 12ft*12ft
+let (0, 0) = field centre
+let (-3, -3) to (-2, -2) = Blue High Goal
+let (2, 2) to (3, 3) = Red High Goal
+
+60 Disks
+- 8 that begin as Preloads, 4 per Alliance
+- 14 that are used as Match Load Discs, 7 per Alliance
+- 38 that begin on the Field
+
+--------------------

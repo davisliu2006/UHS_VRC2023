@@ -1,5 +1,4 @@
-#ifndef GEOMETRY_H
-#define GEOMETRY_H
+#pragma once
 
 #include <cmath>
 #include <iostream>
@@ -7,22 +6,6 @@
 #include "custom_math.hpp"
 
 using namespace std;
-
-// FUNCTIONS
-
-// inline double rad(double x) {return x*M_PI/180;}
-// inline double deg(double x) {return x*180/M_PI;};
-inline double angl_360(double x) {
-    x -= int(x/360);
-    if (x < 0) {x += 360;}
-    return x;
-}
-inline double angl_180(double x) {
-    x -= int(x/360);
-    if (x > 180) {x -= 360;}
-    else if (x <= -180) {x += 360;}
-    return x;
-}
 
 // DATA TYPES
 
@@ -165,5 +148,3 @@ inline vector3 operator /=(vector3& v, double scale) {
     v.x /= scale; v.y /= scale; v.z /= scale;
     return v;
 }
-
-#endif
