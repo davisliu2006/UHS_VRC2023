@@ -22,7 +22,6 @@ inline lv_res_t redBtnmAction(lv_obj_t *btnm, const char *txt) {
 	return LV_RES_OK; // return OK because the button matrix is not deleted
 }
 
-
 /* Selector code when Blue tab is pressed */
 inline lv_res_t blueBtnmAction(lv_obj_t *btnm, const char *txt) {
 	printf("blue button: %s released\n", txt);

@@ -13,10 +13,16 @@
 #include <set>
 #include <vector>
 
-#include "custom_math.hpp"
-#include "geometry.hpp"
+#include "headers/custom_math.hpp"
+#include "headers/geometry.hpp"
 
 using namespace std;
+
+// SETTINGS
+
+#define TANK_DRV 1
+#define X_DRV 2
+#define DRV_MODE TANK_DRV
 
 // DEFINITIONS
 
@@ -24,18 +30,20 @@ using namespace std;
 inline pros::Controller master(pros::E_CONTROLLER_MASTER);
 
 // motor constants
-constexpr int MTR_MAX = 127;
-constexpr int MTR_MAXmV = 12000;
-constexpr double GRN_RPM = 200;
-constexpr double GRN_RPS = GRN_RPM/60;
+const int MTR_MAX = 127;
+const int MTR_MAXmV = 12000;
+const double GRN_RPM = 200;
+const double GRN_RPS = GRN_RPM/60;
+const double BLU_RPM = 600;
+const double BLU_RPS = BLU_RPM/60;
 
 // drivetrain
-constexpr double WHEEL_R  = 2; // inches
-constexpr double WHEEL_C = WHEEL_R*M_PI*2;
-constexpr double DRV_R = 9;
-constexpr double DRV_C = DRV_R*M_PI*2;
-constexpr double DRV_RPS = WHEEL_C*GRN_RPS/DRV_C;
-constexpr double DRV_DPS = DRV_RPS*360;
+const double WHEEL_R  = 2; // inches
+const double WHEEL_C = WHEEL_R*M_PI*2;
+const double DRV_R = 9;
+const double DRV_C = DRV_R*M_PI*2;
+const double DRV_RPS = WHEEL_C*GRN_RPS/DRV_C;
+const double DRV_DPS = DRV_RPS*360;
 inline pros::Motor flmotor(7);
 inline pros::Motor frmotor(9, true);
 inline pros::Motor rlmotor(8);
@@ -49,7 +57,7 @@ inline pros::MotorGroup flywheel({pros::Motor(3, pros::E_MOTOR_GEAR_BLUE, true),
 
 // expansion
 const int ADI_MAX = 4095;
-// inline pros::ADIDigitalOut expansion(4);
+inline pros::ADIDigitalOut expansion(11);
 
 // sensing
 const int TILE = 24; // inches
@@ -62,14 +70,14 @@ inline pros::Rotation tracky(16);
 // FUNCTIONS
 
 // time
-#define _time_impl 1
-#if _time_impl == 0 // uses native timer
+#define TIME_IMPL 1
+#if TIME_IMPL == 0 // uses native timer
 inline double time() {
     timespec t;
     clock_gettime(CLOCK_REALTIME, &t);
     return t.tv_sec+t.tv_nsec*0.000000001;
 }
-#elif _time_impl == 1 // uses pros timer
+#elif TIME_IMPL == 1 // uses pros timer
 inline double time() {
     return pros::micros()*0.000001;
 }

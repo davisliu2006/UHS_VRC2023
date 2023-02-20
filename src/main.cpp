@@ -12,14 +12,27 @@
  */
 void initialize() {
 	cout << "BEGIN INITIALIZE\n";
-	pros::lcd::initialize();
-	sens::reset();
-	selectorInit();
 
+    // IMPORTANT: initialize expansion to 0
+    expansion.set_value(0);
+
+    // drivetrain
     flmotor.set_encoder_units(pros::E_MOTOR_ENCODER_ROTATIONS);
     frmotor.set_encoder_units(pros::E_MOTOR_ENCODER_ROTATIONS);
     rlmotor.set_encoder_units(pros::E_MOTOR_ENCODER_ROTATIONS);
     rrmotor.set_encoder_units(pros::E_MOTOR_ENCODER_ROTATIONS);
+    flmotor.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+    frmotor.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+    rlmotor.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+    rrmotor.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+
+    // shoter
+
+    // other setup
+    pros::lcd::initialize();
+    selectorInit();
+    sens::reset();
+    
     // autonomous();
 }
 
@@ -58,7 +71,7 @@ void competition_initialize() {
  */
 void autonomous() {
 	cout << "BEGIN AUTONOMOUS\n";
-    autonSelection = RED_1;
+    // autonSelection = RED_1;
 	switch (autonSelection) {
 		case RED_1: {route_1(); break;}
 		case BLUE_1: {/*insert auton function*/ break;}

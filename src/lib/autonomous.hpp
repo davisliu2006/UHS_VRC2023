@@ -27,25 +27,25 @@ namespace auton {
     const double TURN_MINDIFF = 5;
     const double TURN_MAXDIFF = 100;
 
-    [[deprecated]] inline void advance(int left, int right) {
-        flmotor.move_velocity(left);
-        frmotor.move_velocity(right);
-        rlmotor.move_velocity(left);
-        rrmotor.move_velocity(right);
+    // simple move
+    #if DRV_MODE == TANK_DRV
+    inline void advance(int vel) {
+        flmotor.move_velocity(vel);
+        frmotor.move_velocity(vel);
+        rlmotor.move_velocity(vel);
+        rrmotor.move_velocity(vel);
     }
-    [[deprecated]] inline void strafe(int left, int right) {
-        flmotor.move_velocity(left);
-        frmotor.move_velocity(left);
-        rlmotor.move_velocity(right);
-        rrmotor.move_velocity(right);
-    }
-
+    #endif
+    #if DRV_MODE == X_DRV
     inline void slide(int x, int y) {
         flmotor.move_velocity(y+x);
         frmotor.move_velocity(y-x);
         rlmotor.move_velocity(y-x);
         rrmotor.move_velocity(y+x);
     }
+    #endif
+
+    // simple turn
     inline void turn(int rotvel) {
         flmotor.move_velocity(rotvel);
         frmotor.move_velocity(-rotvel);
@@ -53,6 +53,7 @@ namespace auton {
         rrmotor.move_velocity(-rotvel);
     }
 
+    // stop
     inline void stop() {
         flmotor.move_velocity(0);
         frmotor.move_velocity(0);
@@ -60,13 +61,52 @@ namespace auton {
         rrmotor.move_velocity(0);
     }
 
+    // move distance
+    #if DRV_MODE == TANK_DRV
+    inline void advance_time(double vel, double dt) {
+        advance(vel);
+        while (dt > 0) {
+            sens::update();
+            dt -= sens::dt;
+        }
+        stop();
+    }
+    inline void advance_straight(double vel, double dt, double corr = 0) {
+        sens::update();
+        double rot = sens::rot;
+        while (dt > 0) {
+            sens::update();
+            double rotdiff = angl_180(rot-sens::rot)/TURN_MAXDIFF;
+            rotdiff = min(1.0, rotdiff);
+            flmotor.move_velocity(vel+rotdiff*corr);
+            frmotor.move_velocity(vel-rotdiff*corr);
+            rlmotor.move_velocity(vel+rotdiff*corr);
+            rrmotor.move_velocity(vel-rotdiff*corr);
+            dt -= sens::dt;
+        }
+        stop();
+    }
+    inline void advance_dist(double dist, double vel) {
+        double ang = dist/WHEEL_C;
+        flmotor.move_relative(ang, vel);
+        frmotor.move_relative(ang, vel);
+        rlmotor.move_relative(ang, vel);
+        rrmotor.move_relative(ang, vel);
+        while (fabs(flmotor.get_target_velocity()) > 0.1) {
+            sens::update();
+            // pros::delay(10);
+        }
+        stop();
+    }
+    #endif
+    #if DRV_MODE == X_DRV
     [[deprecated]] inline void slide_time(int x, int y, double dt) {
         slide(x, y);
         while (dt > 0) {
             sens::update();
             dt -= sens::dt;
         }
-        slide(0, 0);
+        stop();
     }
     inline void slide_dist(double dist, double ang, double vel) { // inches
         ang -= 45;
@@ -82,20 +122,64 @@ namespace auton {
         rlmotor.move_relative(-angy, vely);
         rrmotor.move_relative(angx, velx);
         while (fabs(flmotor.get_target_velocity()) > 0.1) {
-            pros::delay(10);
+            sens::update();
+            // pros::delay(10);
         }
         stop();
     }
+    #endif
+    
+    // turn angle
     inline void turn_to(double heading, double mult = 0.7) {
         heading = angl_360(heading);
         while (abs(sens::rot-heading) > TURN_MINDIFF) {
             sens::update();
-            double rotdiff = angl_180(heading-sens::rot);
-            rotdiff = min(1.0, rotdiff/TURN_MAXDIFF);
+            double rotdiff = angl_180(heading-sens::rot)/TURN_MAXDIFF;
+            rotdiff = min(1.0, rotdiff);
             turn(rotdiff*GRN_RPM*mult);
         }
+        stop();
     }
     inline void turn_angl(double angle) {
         
+    }
+
+    // wait with background processing
+    inline void wait(double t) {
+        while (t > 0) {
+            sens::update();
+            t -= sens::dt;
+        }
+    }
+    inline void wait_until(function<bool()> func) {
+        while (!func()) {
+            sens::update();
+        }
+    }
+
+    // intake
+    inline void intake_for(int vel, double dt) {
+        intake.move(vel);
+        wait(dt);
+        intake.move(0);
+    }
+
+    // shooter
+    inline void shoot(int n = 1) {
+        flywheel.move(MTR_MAX);
+        while (n-- > 0) {
+            indexer.move(-MTR_MAX);
+            wait(2);
+            indexer.move(0);
+            wait_until([]() {
+                return flywheel.get_actual_velocities()[0] >= BLU_RPM*0.9;
+            });
+            indexer.move(MTR_MAX);
+            wait(2);
+            indexer.move(-MTR_MAX);
+            wait(2);
+            indexer.move(0);
+        }
+        flywheel.move(0);
     }
 }
