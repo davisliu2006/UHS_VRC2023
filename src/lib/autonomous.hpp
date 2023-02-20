@@ -64,6 +64,7 @@ namespace auton {
     // move distance
     #if DRV_MODE == TANK_DRV
     inline void advance_time(double vel, double dt) {
+        sens::update();
         advance(vel);
         while (dt > 0) {
             sens::update();
@@ -101,6 +102,7 @@ namespace auton {
     #endif
     #if DRV_MODE == X_DRV
     [[deprecated]] inline void slide_time(int x, int y, double dt) {
+        sens::update();
         slide(x, y);
         while (dt > 0) {
             sens::update();
@@ -131,6 +133,7 @@ namespace auton {
     
     // turn angle
     inline void turn_to(double heading, double mult = 0.7) {
+        sens::update();
         heading = angl_360(heading);
         while (abs(sens::rot-heading) > TURN_MINDIFF) {
             sens::update();
@@ -141,11 +144,13 @@ namespace auton {
         stop();
     }
     inline void turn_angl(double angle) {
-        
+        sens::update();
+        turn_to(angl_360(sens::rot+angle));
     }
 
     // wait with background processing
     inline void wait(double t) {
+        sens::update();
         while (t > 0) {
             sens::update();
             t -= sens::dt;
@@ -158,10 +163,13 @@ namespace auton {
     }
 
     // intake
-    inline void intake_for(int vel, double dt) {
+    inline void set_intake(int vel) {
         intake.move(vel);
+    }
+    inline void intake_for(int vel, double dt) {
+        set_intake(vel);
         wait(dt);
-        intake.move(0);
+        set_intake(0);
     }
 
     // shooter
