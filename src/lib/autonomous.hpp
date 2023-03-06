@@ -3,29 +3,30 @@
 #include "../globals.hpp"
 #include "sensing.hpp"
 
-inline vector2 blue_hi(-2.5, -2.5);
-inline vector2 red_lo(-1, -1);
-inline vector2 red_hi(2.5, 2.5);
-inline vector2 blue_lo(1, 1);
+#define PRECISE_MODE true // use velocity based flywheel and intake
+
+// probably useless definitions
+inline vector2 blue_hi = {-2.5, -2.5};
+inline vector2 red_lo = {-1, -1};
+inline vector2 red_hi = {2.5, 2.5};
+inline vector2 blue_lo = {1, 1};
 inline vector<vector2> rollers = {
-    vector2(1.75, -3), vector2(3, -1.75),
-    vector2(-3, 1.75), vector2(-1.75, 3)
+    {1.75, -3}, {3, -1.75},
+    {-3, 1.75}, {-1.75, 3}
 };
 inline vector<vector2> disks = {
     // diangonal
-    vector2(-0.5, 0.5), vector2(-1, 1), vector2(-1.5, 1.5),
-    vector2(-2, 2), vector2(-2.5, 2.5),
-    vector2(0.5, -0.5), vector2(1, -1), vector2(1.5, -1.5),
-    vector2(2, -2), vector2(2.5, -2.5),
+    {-0.5, 0.5}, {-1, 1}, {-1.5, 1.5}, {-2, 2}, {-2.5, 2.5},
+    {0.5, -0.5}, {1, -1}, {1.5, -1.5}, {2, -2}, {2.5, -2.5},
     // next to diagonal
-    vector2(-0.5, 1.5), vector2(0, 1), vector2(-.5, 0.5), /*skip*/ vector2(1.5, -0.5),
-    vector2(-1.5, 0.5), /*skip*/ vector2(-0.5, -0.5), vector2(0, -1), vector2(0.5, -1.5),
+    {-0.5, 1.5}, {0, 1}, {-.5, 0.5}, /*skip*/ {1.5, -0.5},
+    {-1.5, 0.5}, /*skip*/ {-0.5, -0.5}, {0, -1}, {0.5, -1.5},
     // edge
 };
 
 namespace auton {
-    const double TURN_MINDIFF = 5;
-    const double TURN_MAXDIFF = 100;
+    const double TURN_MINDIFF = 5; // changes turn tolerence (minimum angle diff)
+    const double TURN_MAXDIFF = 100; // changes turn velocity scaling (upper bound angle)
 
     // simple move
     #if DRV_MODE == TANK_DRV
@@ -72,7 +73,7 @@ namespace auton {
         }
         stop();
     }
-    inline void advance_straight(double vel, double dt, double corr = 0) {
+    inline void advance_straight(double vel, double dt, double corr = 1) {
         sens::update();
         double rot = sens::rot;
         while (dt > 0) {
@@ -93,7 +94,7 @@ namespace auton {
         frmotor.move_relative(ang, vel);
         rlmotor.move_relative(ang, vel);
         rrmotor.move_relative(ang, vel);
-        while (fabs(flmotor.get_target_velocity()) > 0.1) {
+        while (fabs(flmotor.get_target_velocity()) > 1) {
             sens::update();
             // pros::delay(10);
         }
@@ -101,7 +102,7 @@ namespace auton {
     }
     #endif
     #if DRV_MODE == X_DRV
-    [[deprecated]] inline void slide_time(int x, int y, double dt) {
+    [[deprecated]] inline void slide_time(double x, double y, double dt) {
         sens::update();
         slide(x, y);
         while (dt > 0) {
@@ -123,7 +124,7 @@ namespace auton {
         frmotor.move_relative(-angy, vely);
         rlmotor.move_relative(-angy, vely);
         rrmotor.move_relative(angx, velx);
-        while (fabs(flmotor.get_target_velocity()) > 0.1) {
+        while (fabs(flmotor.get_target_velocity()) > 1) {
             sens::update();
             // pros::delay(10);
         }
@@ -132,14 +133,14 @@ namespace auton {
     #endif
     
     // turn angle
-    inline void turn_to(double heading, double mult = 0.7) {
+    inline void turn_to(double heading, double mult = 1) {
         sens::update();
         heading = angl_360(heading);
         while (abs(sens::rot-heading) > TURN_MINDIFF) {
             sens::update();
             double rotdiff = angl_180(heading-sens::rot)/TURN_MAXDIFF;
             rotdiff = min(1.0, rotdiff);
-            turn(rotdiff*GRN_RPM*mult);
+            turn(rotdiff*WHEEL_RPM*mult);
         }
         stop();
     }
@@ -157,37 +158,86 @@ namespace auton {
         }
     }
     inline void wait_until(function<bool()> func) {
+        sens::update();
         while (!func()) {
             sens::update();
         }
     }
 
     // intake
-    inline void set_intake(int vel) {
+    /*
+    Range for val is [-127, 127].
+    */
+    inline void set_intake(int val) {
+        #if PRECISE_MODE
+        val = double(val)/MTR_MAX*RED_RPM;
+        intake.move_velocity(val);
+        #else
         intake.move(vel);
+        #endif
     }
-    inline void intake_for(int vel, double dt) {
-        set_intake(vel);
+    /*
+    Range for val is [-127, 127].
+    */
+    inline void intake_for(int val, double dt) {
+        set_intake(val);
         wait(dt);
         set_intake(0);
     }
 
     // shooter
-    inline void shoot(int n = 1) {
-        flywheel.move(MTR_MAX);
-        while (n-- > 0) {
-            indexer.move(-MTR_MAX);
-            wait(2);
-            indexer.move(0);
-            wait_until([]() {
-                return flywheel.get_actual_velocities()[0] >= BLU_RPM*0.9;
-            });
-            indexer.move(MTR_MAX);
-            wait(2);
-            indexer.move(-MTR_MAX);
-            wait(2);
-            indexer.move(0);
+    /*
+    val = true --> forward
+    val = false --> rest
+    */
+    #if INDEXER_TYPE == TYPE_MTR
+    inline void set_indexer(bool val) {
+        if (val) {indexer.move_absolute(55, INDX_RPM);}
+        else {indexer.move_absolute(0, INDX_RPM);}
+    }
+    #elif INDEXER_TYPE == TYPE_PNEU
+    inline void set_indexer(bool val) {
+        indexer.set_value(pos*ADI_MAX);
+    }
+    #endif
+    /*
+    Range for val is [-127, 127].
+    */
+    inline void set_flywheel(int val) {
+        #if PRECISE_MODE
+        if (val == 0) { // no braking for flywheel
+            flywheel.move(0);
+        } else {
+            val = double(val)/MTR_MAX*BLU_RPM;
+            flywheel.move_velocity(val);
         }
-        flywheel.move(0);
+        #else
+        flywheel.move(vel);
+        #endif
+    }
+    /*
+    Range for val is [-127, 127].
+    */
+    inline void shoot(int val, int n = 1) {
+        set_flywheel(val);
+        set_indexer(false);
+        while (n-- > 0) {
+            wait(2);
+            /*wait_until([]() {
+                return flywheel.get_actual_velocity() >= BLU_RPM*0.9;
+            });*/
+            set_indexer(true);
+            wait(2);
+            set_indexer(false);
+        }
+        set_flywheel(0);
+    }
+
+    // initialize
+    /*
+    Runs at the beginning of autonomous before any route.
+    */
+    inline void init() {
+        
     }
 }

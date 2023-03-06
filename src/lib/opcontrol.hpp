@@ -6,7 +6,7 @@
 // maps joystick position to drive speed
 inline double joymap(int x){
     double temp = double(x)/MTR_MAX;
-    return temp*abs(temp);
+    return temp*sqrt(abs(temp));
 }
 
 inline bool is_opcontrol = false;
@@ -37,15 +37,15 @@ inline void opcontrol_start() {
         double y = joymap(master.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y))*drv_rev;
         double rot = joymap(master.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X));
         #if DRV_MODE == TANK_DRV
-        flmotor.move_velocity((y+rot)*GRN_RPM);
-        frmotor.move_velocity((y-rot)*GRN_RPM);
-        rlmotor.move_velocity((y+rot)*GRN_RPM);
-        rrmotor.move_velocity((y-rot)*GRN_RPM);
+        flmotor.move_velocity((y+rot)*WHEEL_RPM);
+        frmotor.move_velocity((y-rot)*WHEEL_RPM);
+        rlmotor.move_velocity((y+rot)*WHEEL_RPM);
+        rrmotor.move_velocity((y-rot)*WHEEL_RPM);
         #elif DRV_MODE == X_DRV
-        flmotor.move_velocity((y+x+rot)*GRN_RPM);
-        frmotor.move_velocity((y-x-rot)*GRN_RPM);
-        rlmotor.move_velocity((y-x+rot)*GRN_RPM);
-        rrmotor.move_velocity((y+x-rot)*GRN_RPM);
+        flmotor.move_velocity((y+x+rot)*WHEEL_RPM);
+        frmotor.move_velocity((y-x-rot)*WHEEL_RPM);
+        rlmotor.move_velocity((y-x+rot)*WHEEL_RPM);
+        rrmotor.move_velocity((y+x-rot)*WHEEL_RPM);
         #endif
 
         // intake
@@ -65,13 +65,19 @@ inline void opcontrol_start() {
         } else {
             flywheel.move(0);
         }
+        #if INDEXER_TYPE == TYPE_MTR
         if (master.get_digital(pros::E_CONTROLLER_DIGITAL_UP)) {
-            indexer.move(MTR_MAX);
-        } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)) {
-            indexer.move(-MTR_MAX);
+            indexer.move_absolute(55, INDX_RPM);
         } else {
-            indexer.move(0);
+            indexer.move_absolute(0, INDX_RPM);
         }
+        #elif INDEXER_TYPE == TYPE_PNEU
+        if (master.get_digital(pros::E_CONTROLLER_DIGITAL_UP)) {
+            indexer.set_value(ADI_MAX);
+        } else {
+            indexer.set_value(0);
+        }
+        #endif
 
         // drivetrain reverse
         if (master.get_digital(pros::E_CONTROLLER_DIGITAL_X)) { // shooter front

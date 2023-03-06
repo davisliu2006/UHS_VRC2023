@@ -3,6 +3,8 @@
 #include "../globals.hpp"
 #include "../lib/autonomous.hpp"
 
-inline void skills() {
-    
+namespace route {
+    inline void skills() {
+
+    }
 }

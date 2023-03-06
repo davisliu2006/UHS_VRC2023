@@ -29,43 +29,60 @@ using namespace std;
 // controller
 inline pros::Controller master(pros::E_CONTROLLER_MASTER);
 
-// motor constants
+// motor and adi constants
 const int MTR_MAX = 127;
 const int MTR_MAXmV = 12000;
 const double GRN_RPM = 200;
 const double GRN_RPS = GRN_RPM/60;
 const double BLU_RPM = 600;
 const double BLU_RPS = BLU_RPM/60;
+const double RED_RPM = 100;
+const double RED_RPS = RED_RPM/60;
+const int ADI_MAX = 4095;
 
 // drivetrain
 const double WHEEL_R  = 2; // inches
 const double WHEEL_C = WHEEL_R*M_PI*2;
+inline double WHEEL_RPM = BLU_RPM; // initialize later
+inline double WHEEL_RPS = WHEEL_RPM/60; // initialize later
 const double DRV_R = 9;
 const double DRV_C = DRV_R*M_PI*2;
 const double DRV_RPS = WHEEL_C*GRN_RPS/DRV_C;
 const double DRV_DPS = DRV_RPS*360;
-inline pros::Motor flmotor(7);
-inline pros::Motor frmotor(9, true);
-inline pros::Motor rlmotor(8);
-inline pros::Motor rrmotor(10, true);
+inline pros::Motor flmotor(17, pros::E_MOTOR_GEAR_BLUE, true);
+inline pros::Motor frmotor(20, pros::E_MOTOR_GEAR_BLUE);
+inline pros::Motor rlmotor(18, pros::E_MOTOR_GEAR_BLUE, true);
+inline pros::Motor rrmotor(19, pros::E_MOTOR_GEAR_BLUE);
 
-// intake and shooter
-inline pros::Motor intake(6);
-inline pros::Motor indexer(5);
-inline pros::MotorGroup flywheel({pros::Motor(3, pros::E_MOTOR_GEAR_BLUE, true),
-    pros::Motor(4, pros::E_MOTOR_GEAR_BLUE, true)});
+// intake
+// inline pros::Motor intake(6);
+inline pros::MotorGroup intake({pros::Motor(12, pros::E_MOTOR_GEAR_RED),
+    pros::Motor(13, pros::E_MOTOR_GEAR_RED)});
+
+// shooter
+#define TYPE_MTR 1
+#define TYPE_PNEU 2
+#define INDEXER_TYPE TYPE_MTR
+#if INDEXER_TYPE == TYPE_MTR
+inline double INDX_RPM = GRN_RPM; // initialize later
+inline pros::Motor indexer(14, pros::E_MOTOR_GEAR_BLUE);
+#elif INDEXER_TYPE == TYPE_PNEU
+inline pros::ADIDigitalOut indexer(2);
+#endif
+inline pros::Motor flywheel(11, pros::E_MOTOR_GEAR_BLUE);
+/*inline pros::MotorGroup flywheel({pros::Motor(3, pros::E_MOTOR_GEAR_BLUE),
+    pros::Motor(4, pros::E_MOTOR_GEAR_BLUE)});*/
 
 // expansion
-const int ADI_MAX = 4095;
-inline pros::ADIDigitalOut expansion(11);
+inline pros::ADIDigitalOut expansion(1);
 
 // sensing
 const int TILE = 24; // inches
 const int FIELD = TILE*6;
 const double GRVTY = 9.8;
-inline pros::IMU inertial(1);
-inline pros::Rotation trackx(15);
-inline pros::Rotation tracky(16);
+inline pros::IMU inertial(16);
+inline pros::Rotation trackx(9);
+inline pros::Rotation tracky(8);
 
 // FUNCTIONS
 
