@@ -8,12 +8,12 @@ using namespace std;
 inline double rad(double x) {return x*M_PI/180;}
 inline double deg(double x) {return x*180/M_PI;};
 inline double angl_360(double x) {
-    x -= int(x/360);
+    x = fmod(x, 360);
     if (x < 0) {x += 360;}
     return x;
 }
 inline double angl_180(double x) {
-    x -= int(x/360);
+    x = fmod(x, 360);
     if (x > 180) {x -= 360;}
     else if (x <= -180) {x += 360;}
     return x;
