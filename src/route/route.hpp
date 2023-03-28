@@ -7,7 +7,7 @@
 namespace route {
     inline void route1() {
         #if DRV_MODE == TANK_DRV
-        auton::set_intake(-127); // spin roller
+        auton::set_intake(-MTR_MAX); // spin roller
         auton::advance_straight(-WHEEL_RPM, 0.75);
         auton::set_intake(0);
         
@@ -27,7 +27,7 @@ namespace route {
         auton::turn_angl(90);
         auton::advance_straight(WHEEL_RPM, 1);
         auton::turn_angl(-90);
-        auton::set_intake(-127); // spin roller
+        auton::set_intake(-MTR_MAX); // spin roller
         auton::advance_straight(-WHEEL_RPM, 1);
         auton::set_intake(0);
         #elif DRV_MODE == X_DRV
