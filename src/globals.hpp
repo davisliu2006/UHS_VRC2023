@@ -20,9 +20,15 @@ using namespace std;
 
 // SETTINGS
 
+// drivetrain types
 #define TANK_DRV 1
 #define X_DRV 2
-#define DRV_MODE TANK_DRV
+// movable part types
+#define TYPE_MTR 1
+#define TYPE_PNEU 2
+
+// drive mode
+#define DRV_MODE TANK_DRV // tank drive or x-drive
 
 // DEFINITIONS
 
@@ -38,13 +44,18 @@ const double BLU_RPM = 600;
 const double BLU_RPS = BLU_RPM/60;
 const double RED_RPM = 100;
 const double RED_RPS = RED_RPM/60;
+inline map<int,int> gear_mp = {
+    {pros::E_MOTOR_GEAR_GREEN, GRN_RPM},
+    {pros::E_MOTOR_GEAR_BLUE, BLU_RPM},
+    {pros::E_MOTOR_GEAR_RED, RED_RPM}
+};
 const int ADI_MAX = 4095;
 
 // drivetrain
 const double WHEEL_R  = 2; // inches
 const double WHEEL_C = WHEEL_R*M_PI*2;
-inline double WHEEL_RPM = BLU_RPM; // initialize later
-inline double WHEEL_RPS = WHEEL_RPM/60; // initialize later
+inline double WHEEL_RPM = 0; // initialize later
+inline double WHEEL_RPS = 0; // initialize later
 const double DRV_R = 9;
 const double DRV_C = DRV_R*M_PI*2;
 const double DRV_RPS = WHEEL_C*GRN_RPS/DRV_C;
@@ -55,23 +66,30 @@ inline pros::Motor rlmotor(18, pros::E_MOTOR_GEAR_BLUE, true);
 inline pros::Motor rrmotor(19, pros::E_MOTOR_GEAR_BLUE);
 
 // intake
-// inline pros::Motor intake(6);
+#define INTAKE_NMTR 2 // number of intake motors
+inline double INTK_RPM = 0; // initialize later
+#if INTAKE_NMTR == 1
+inline pros::Motor intake(6);
+#else
 inline pros::MotorGroup intake({pros::Motor(12, pros::E_MOTOR_GEAR_RED),
     pros::Motor(13, pros::E_MOTOR_GEAR_RED)});
+#endif
 
 // shooter
-#define TYPE_MTR 1
-#define TYPE_PNEU 2
-#define INDEXER_TYPE TYPE_MTR
+#define INDEXER_TYPE TYPE_MTR // indexer is motor or pneumatic
+#define FLYWHL_NMTR 1 // number of flywheel motors
 #if INDEXER_TYPE == TYPE_MTR
-inline double INDX_RPM = GRN_RPM; // initialize later
+inline double INDX_RPM = 0; // initialize later
 inline pros::Motor indexer(14, pros::E_MOTOR_GEAR_BLUE);
 #elif INDEXER_TYPE == TYPE_PNEU
 inline pros::ADIDigitalOut indexer(2);
 #endif
+#if FLYWHL_NMTR == 1
 inline pros::Motor flywheel(11, pros::E_MOTOR_GEAR_BLUE);
-/*inline pros::MotorGroup flywheel({pros::Motor(3, pros::E_MOTOR_GEAR_BLUE),
-    pros::Motor(4, pros::E_MOTOR_GEAR_BLUE)});*/
+#else
+inline pros::MotorGroup flywheel({pros::Motor(3, pros::E_MOTOR_GEAR_BLUE),
+    pros::Motor(4, pros::E_MOTOR_GEAR_BLUE)});
+#endif
 
 // expansion
 inline pros::ADIDigitalOut expansion(1);

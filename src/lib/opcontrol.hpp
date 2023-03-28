@@ -27,8 +27,9 @@ inline void opcontrol_start() {
         // logging
         print_time += sens::dt;
         if (print_time >= print_delay) {
-            cout << sens::t << ' ' << sens::dt << '\n';
-            cout << sens::rot << ' ' << sens::rot_trg << '\n';
+            // cout << sens::t << ' ' << sens::dt << '\n';
+            // cout << sens::rot << ' ' << sens::rot_trg << '\n';
+            cout << flywheel.get_actual_velocity() << '\n';
             print_time -= print_delay;
         }
 
@@ -59,15 +60,23 @@ inline void opcontrol_start() {
 
         // shooter
         if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
-            flywheel.move(MTR_MAX);
+            if (flywheel.get_actual_velocity() < BLU_RPM*0.4 && false) {
+                flywheel.move(MTR_MAX);
+            } else {
+                flywheel.move_velocity(BLU_RPM*0.5);
+            }
         } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
-            flywheel.move(-MTR_MAX);
+            if (flywheel.get_actual_velocity() > -BLU_RPM*0.4 && false) {
+                flywheel.move(-MTR_MAX);
+            } else {
+                flywheel.move_velocity(-BLU_RPM*0.5);
+            }
         } else {
             flywheel.move(0);
         }
         #if INDEXER_TYPE == TYPE_MTR
         if (master.get_digital(pros::E_CONTROLLER_DIGITAL_UP)) {
-            indexer.move_absolute(55, INDX_RPM);
+            indexer.move_absolute(50, INDX_RPM);
         } else {
             indexer.move_absolute(0, INDX_RPM);
         }

@@ -19,6 +19,10 @@ void initialize() {
     indexer.set_value(0);
     #endif
 
+    // lcd
+    pros::lcd::initialize();
+    selectorInit();
+
     // drivetrain
     /*if (flmotor.get_gearing() == pros::E_MOTOR_GEAR_GREEN) {WHEEL_RPM = GRN_RPM;}
     else {WHEEL_RPM = BLU_RPM;}*/
@@ -30,16 +34,23 @@ void initialize() {
     frmotor.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
     rlmotor.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
     rrmotor.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+    WHEEL_RPM = gear_mp[flmotor.get_gearing()];
+    WHEEL_RPS = WHEEL_RPM/60;
+    cout << "WHEEL_RPM: " << WHEEL_RPM << '\n';
+
+    // intake
+    #if INTAKE_NMTR == 1
+    INTK_RPM = gear_mp[intake.get_gearing()];
+    #else
+    INTK_RPM = gear_mp[intake.get_gearing()[0]];
+    #endif
+    cout << "INTK_RPM: " << INTK_RPM << '\n';
 
     // shooter
     #if INDEXER_TYPE == TYPE_MTR
-    if (indexer.get_gearing() == pros::E_MOTOR_GEAR_GREEN) {INDX_RPM = GRN_RPM;}
-    else if (indexer.get_gearing() == pros::E_MOTOR_GEAR_BLUE) {INDX_RPM = BLU_RPM;}
+    INDX_RPM = gear_mp[indexer.get_gearing()];
     #endif
-
-    // lcd
-    pros::lcd::initialize();
-    selectorInit();
+    cout << "INDX_RPM: " << INDX_RPM << '\n';
     
     // IMPORTANT: stalling initializations
     #if INDEXER_TYPE == TYPE_MTR
@@ -47,6 +58,7 @@ void initialize() {
     #endif
     sens::reset();
     #if INDEXER_TYPE == TYPE_MTR
+    indexer.move(0);
     indexer.tare_position();
     #endif
 }

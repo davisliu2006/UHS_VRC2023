@@ -18,6 +18,10 @@ namespace sens {
     inline double dt = 0;
     
     inline void reset() {
+        if ((inertial.get_status() & pros::c::E_IMU_STATUS_ERROR) == pros::c::E_IMU_STATUS_ERROR) {
+            pros::lcd::print(1, "Warning: No inertial attatched.");
+            return;
+        }
         inertial.reset();
         while (inertial.is_calibrating()) {}
         x = 0; y = 0;

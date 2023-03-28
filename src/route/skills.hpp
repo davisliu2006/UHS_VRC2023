@@ -5,6 +5,6 @@
 
 namespace route {
     inline void skills() {
-
+        
     }
 }

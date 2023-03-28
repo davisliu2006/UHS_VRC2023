@@ -26,7 +26,7 @@ inline vector<vector2> disks = {
 
 namespace auton {
     const double TURN_MINDIFF = 5; // changes turn tolerence (minimum angle diff)
-    const double TURN_MAXDIFF = 100; // changes turn velocity scaling (upper bound angle)
+    const double TURN_MAXDIFF = 100; // changes turn scaling upper bound angle
 
     // simple move
     #if DRV_MODE == TANK_DRV
@@ -94,7 +94,7 @@ namespace auton {
         frmotor.move_relative(ang, vel);
         rlmotor.move_relative(ang, vel);
         rrmotor.move_relative(ang, vel);
-        while (fabs(flmotor.get_target_velocity()) > 1) {
+        while (abs(flmotor.get_target_velocity()) > 1) {
             sens::update();
             // pros::delay(10);
         }
@@ -124,7 +124,7 @@ namespace auton {
         frmotor.move_relative(-angy, vely);
         rlmotor.move_relative(-angy, vely);
         rrmotor.move_relative(angx, velx);
-        while (fabs(flmotor.get_target_velocity()) > 1) {
+        while (abs(flmotor.get_target_velocity()) > 1) {
             sens::update();
             // pros::delay(10);
         }
@@ -133,6 +133,8 @@ namespace auton {
     #endif
     
     // turn angle
+    #define TURN_IMPL 2
+    #if TURN_IMPL == 1 // ROT_MINDIFF only changes tolerance, does not change scaling
     inline void turn_to(double heading, double mult = 1) {
         sens::update();
         heading = angl_360(heading);
@@ -144,6 +146,21 @@ namespace auton {
         }
         stop();
     }
+    #elif TURN_IMPL == 2 // ROT_MINDIFF changes scaling and tolerance
+    inline void turn_to(double heading, double mult = 1) {
+        sens::update();
+        heading = angl_360(heading);
+        double rotdiff_raw;
+        while ((rotdiff_raw = abs(angl_180(heading-sens::rot))) > TURN_MINDIFF) {
+            sens::update();
+            double rotdiff = (rotdiff_raw-sign(rotdiff_raw)*TURN_MINDIFF)
+                /(TURN_MAXDIFF-TURN_MINDIFF);
+            rotdiff = min(1.0, rotdiff);
+            turn(rotdiff*WHEEL_RPM*mult);
+        }
+        stop();
+    }
+    #endif
     inline void turn_angl(double angle) {
         sens::update();
         turn_to(angl_360(sens::rot+angle));
@@ -170,10 +187,10 @@ namespace auton {
     */
     inline void set_intake(int val) {
         #if PRECISE_MODE
-        val = double(val)/MTR_MAX*RED_RPM;
+        val = double(val)/MTR_MAX*INTK_RPM;
         intake.move_velocity(val);
         #else
-        intake.move(vel);
+        intake.move(val);
         #endif
     }
     /*
@@ -192,7 +209,7 @@ namespace auton {
     */
     #if INDEXER_TYPE == TYPE_MTR
     inline void set_indexer(bool val) {
-        if (val) {indexer.move_absolute(55, INDX_RPM);}
+        if (val) {indexer.move_absolute(50, INDX_RPM);}
         else {indexer.move_absolute(0, INDX_RPM);}
     }
     #elif INDEXER_TYPE == TYPE_PNEU
