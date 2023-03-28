@@ -1,0 +1,15 @@
+# folders
+.cache/
+.d/
+.vscode/
+bin/
+firmware/
+include/
+
+# files
+compile_commands.json
+temp.errors
+temp.log
+
+# extensions
+*.ini
