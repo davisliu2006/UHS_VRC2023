@@ -31,7 +31,7 @@ namespace vision {
     */
     inline void init() {
         set<int> redteam_flags = {RED_1, RED_2, RED_3, RED_4, RED_5};
-        if (redteam_flags.find(RED_1) != redteam_flags.end()) {
+        if (redteam_flags.find(autonSelection) != redteam_flags.end()) {
             alliance = TEAM_RED;
         } else {
             alliance = TEAM_BLUE;
