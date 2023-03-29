@@ -20,7 +20,7 @@ namespace vision {
     inline int alliance;
 
     //Initalize the vision sensor
-    inline pros::Vision visionSensor(21);
+    inline pros::Vision vsensor(21);
 
     //Uhhhh like set signature for the vision sensor idfk
     inline pros::vision_signature_s_t BLUE = pros::Vision::signature_from_utility(1, -4293, -3397, -3846, 7555, 10683, 9118, BLUE_RANGE_FACTOR, 0);
@@ -37,17 +37,17 @@ namespace vision {
             alliance = TEAM_BLUE;
         }
     }
-    inline void visionShoot() {
+    inline void vision_shoot() {
         //Adds the red and blue colors to the sensor
-        visionSensor.set_signature(0, &BLUE);
-        visionSensor.set_signature(1, &RED);
-        objects = visionSensor.get_object_count();
+        vsensor.set_signature(0, &BLUE);
+        vsensor.set_signature(1, &RED);
+        objects = vsensor.get_object_count();
         pros::vision_object_s_t goal;
         if (objects >= 1) {
             if (alliance == TEAM_RED) {
-                goal = visionSensor.get_by_sig(0, RED.id);
+                goal = vsensor.get_by_sig(0, RED.id);
             } else if (alliance == TEAM_BLUE) {
-                goal = visionSensor.get_by_sig(0, RED.id);
+                goal = vsensor.get_by_sig(0, RED.id);
             }
         }
         while (goal.x_middle_coord < -HORIZONTAL_ERROR_ROOM || goal.x_middle_coord > HORIZONTAL_ERROR_ROOM || goal.y_middle_coord < -VERTICIAL_ERROR_ROOM || goal.y_middle_coord > VERTICIAL_ERROR_ROOM) {
@@ -58,7 +58,6 @@ namespace vision {
                 if (goal.x_middle_coord > HORIZONTAL_ERROR_ROOM) {
                     auton::turn(-60);
                 }
-                    
             }
             while (goal.y_middle_coord < -VERTICIAL_ERROR_ROOM || goal.y_middle_coord > VERTICIAL_ERROR_ROOM) {
                 if (goal.y_middle_coord < -VERTICIAL_ERROR_ROOM) {
