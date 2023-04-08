@@ -8,7 +8,10 @@ include/
 
 # files
 .DS_Store
+common.mk
 compile_commands.json
+Makefile
+project.pros
 temp.errors
 temp.log
 
