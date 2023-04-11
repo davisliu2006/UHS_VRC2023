@@ -53,11 +53,13 @@ void initialize() {
     cout << "INDX_RPM: " << INDX_RPM << '\n';
     
     // IMPORTANT: stalling initializations
+    double stall_st = time(); // stall time start
     #if INDEXER_TYPE == TYPE_MTR
     indexer.move(-MTR_MAX);
     #endif
     sens::reset();
     #if INDEXER_TYPE == TYPE_MTR
+    auton::wait_until([&]() {return time()-stall_st >= 1;}); // mininmum stall time
     indexer.move(0);
     indexer.tare_position();
     #endif
