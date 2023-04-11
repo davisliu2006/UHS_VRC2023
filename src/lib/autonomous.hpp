@@ -209,7 +209,7 @@ namespace auton {
     */
     #if INDEXER_TYPE == TYPE_MTR
     inline void set_indexer(bool val) {
-        if (val) {indexer.move_absolute(50, INDX_RPM);}
+        if (val) {indexer.move_absolute(60, INDX_RPM);}
         else {indexer.move_absolute(0, INDX_RPM);}
     }
     #elif INDEXER_TYPE == TYPE_PNEU

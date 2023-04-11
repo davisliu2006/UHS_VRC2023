@@ -29,7 +29,7 @@ inline void opcontrol_start() {
         if (print_time >= print_delay) {
             // cout << sens::t << ' ' << sens::dt << '\n';
             // cout << sens::rot << ' ' << sens::rot_trg << '\n';
-            cout << flywheel.get_actual_velocity() << '\n';
+            cout << indexer.get_position() << '\n';
             print_time -= print_delay;
         }
 
@@ -76,7 +76,7 @@ inline void opcontrol_start() {
         }
         #if INDEXER_TYPE == TYPE_MTR
         if (master.get_digital(pros::E_CONTROLLER_DIGITAL_UP)) {
-            indexer.move_absolute(50, INDX_RPM);
+            indexer.move_absolute(60, INDX_RPM);
         } else {
             indexer.move_absolute(0, INDX_RPM);
         }
