@@ -255,6 +255,12 @@ namespace auton {
     Runs at the beginning of autonomous before any route.
     */
     inline void init() {
-        
+        #if INDEXER_TYPE == TYPE_MTR
+        auton::wait_until([&]() {return !pros::competition::is_disabled();});
+        indexer.move(-MTR_MAX);
+        auton::wait(0.2);
+        indexer.move(0);
+        indexer.tare_position();
+        #endif
     }
 }

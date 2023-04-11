@@ -24,8 +24,6 @@ void initialize() {
     selectorInit();
 
     // drivetrain
-    /*if (flmotor.get_gearing() == pros::E_MOTOR_GEAR_GREEN) {WHEEL_RPM = GRN_RPM;}
-    else {WHEEL_RPM = BLU_RPM;}*/
     flmotor.set_encoder_units(pros::E_MOTOR_ENCODER_ROTATIONS);
     frmotor.set_encoder_units(pros::E_MOTOR_ENCODER_ROTATIONS);
     rlmotor.set_encoder_units(pros::E_MOTOR_ENCODER_ROTATIONS);
@@ -54,13 +52,6 @@ void initialize() {
     
     // IMPORTANT: stalling initializations
     sens::reset();
-    #if INDEXER_TYPE == TYPE_MTR
-    auton::wait_until([&]() {return !pros::competition::is_disabled();});
-    indexer.move(-MTR_MAX);
-    auton::wait(0.5);
-    indexer.move(0);
-    indexer.tare_position();
-    #endif
 }
 
 /**
@@ -129,5 +120,12 @@ void autonomous() {
  */
 void opcontrol() {
 	cout << "BEGIN OPCONTROL\n";
+    #if INDEXER_TYPE == TYPE_MTR
+    auton::wait_until([&]() {return !pros::competition::is_disabled();});
+    indexer.move(-MTR_MAX);
+    auton::wait(0.2);
+    indexer.move(0);
+    indexer.tare_position();
+    #endif
 	opcontrol_start();
 }
