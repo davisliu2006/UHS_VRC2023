@@ -99,8 +99,8 @@ void autonomous() {
 		case BLUE_3: {route::route3(); break;}
 		case RED_4: {route::route4(); break;}
 		case BLUE_4: {route::route4(); break;}
-		case RED_5: {/*insert auton function*/ break;}
-		case BLUE_5: {/*insert auton function*/ break;}
+		case RED_5: {break;}
+		case BLUE_5: {break;}
 		case SKILLS: {route::skills(); break;}
 	}
 }

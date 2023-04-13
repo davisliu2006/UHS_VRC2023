@@ -9,41 +9,32 @@ namespace route {
 
     inline void route1() {
         #if DRV_MODE == TANK_DRV
-        auton::set_intake(-INTK_RPM); // spin roller
+        // spin roller
+        auton::set_intake(-INTK_RPM);
         auton::advance_time(-WHEEL_RPM*0.3, 0.5);
         auton::set_intake(0);
-        auton::turn_angl(90); // set up shoot
-        auton::wait(3);
-        auton::set_indexer(true); // shoot
-        auton::wait(3);
-        auton::set_indexer(false);
-        auton::wait(3);
-        auton::set_indexer(true);
-        auton::wait(3);
-        auton::set_indexer(false);
-        auton::set_flywheel(0);
+        // set up shoot
+        auton::turn_to(90);
+        // shoot
+        auton::shoot(BLU_RPM, 2);
         #elif DRV_MODE == X_DRV
         #endif  
     }
 
     inline void route2() {
         #if DRV_MODE == TANK_DRV
-        auton::advance_time(-WHEEL_RPM, 0.8); // go to roller
+        // go to roller
+        auton::advance_time(-WHEEL_RPM, 0.8);
         auton::turn_to(90);
-        auton::set_intake(-INTK_RPM); // spin roller
+        // spin roller
+        auton::set_intake(-INTK_RPM);
         auton::advance_time(-WHEEL_RPM*0.3, 0.5);
         auton::set_intake(0);
-        auton::set_flywheel(BLU_RPM); // set up shoot
+        // set up shoot
+        auton::set_flywheel(BLU_RPM);
         auton::advance_time(WHEEL_RPM, 1);
-        auton::wait(3);
-        auton::set_indexer(true); // shoot
-        auton::wait(3);
-        auton::set_indexer(false);
-        auton::wait(3);
-        auton::set_indexer(true);
-        auton::wait(3);
-        auton::set_indexer(false);
-        auton::set_flywheel(0);
+        // shoot
+        auton::shoot(BLU_RPM, 2);
         #elif DRV_MODE == X_DRV
         #endif
     }
@@ -56,23 +47,19 @@ namespace route {
 
     inline void route4() {
         #if DRV_MODE == TANK_DRV
-        auton::advance_time(-WHEEL_RPM, 0.8); // go to roller
+        // go to roller
+        auton::advance_time(-WHEEL_RPM, 0.8);
         auton::turn_to(90);
-        auton::set_intake(-INTK_RPM); // spin roller
+        // spin roller
+        auton::set_intake(-INTK_RPM);
         auton::advance_time(-WHEEL_RPM*0.3, 0.5);
         auton::set_intake(0);
-        auton::set_flywheel(BLU_RPM); // set up shoot
+        // set up shoot
+        auton::set_flywheel(BLU_RPM);
         auton::turn_to(0);
         auton::advance_time(WHEEL_RPM, 1);
-        auton::wait(3);
-        auton::set_indexer(true); // shoot
-        auton::wait(3);
-        auton::set_indexer(false);
-        auton::wait(3);
-        auton::set_indexer(true);
-        auton::wait(3);
-        auton::set_indexer(false);
-        auton::set_flywheel(0);
+        // shoot
+        auton::shoot(BLU_RPM, 2);
         #elif DRV_MODE == X_DRV
         #endif
     }

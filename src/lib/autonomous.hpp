@@ -108,7 +108,7 @@ namespace auton {
         }
         stop();
     }
-    inline void slide_dist(double dist, double ang, double vel) { // inches
+    [[deprecated]] inline void slide_dist(double dist, double ang, double vel) { // inches
         ang -= 45;
         ang = rad(ang);
         const double cosine = cos(ang), sine = sin(ang);
@@ -224,9 +224,7 @@ namespace auton {
         set_indexer(false);
         while (n-- > 0) {
             wait(2);
-            /*wait_until([]() {
-                return flywheel.get_actual_velocity() >= BLU_RPM*0.9;
-            });*/
+            wait_until([&]() {return flywheel.get_actual_velocity() >= vel*0.9;});
             set_indexer(true);
             wait(2);
             set_indexer(false);
