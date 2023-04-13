@@ -5,27 +5,24 @@
 #include "skills.hpp"
 
 namespace route {
+    // NORMAL ROUTES (high goal)
+
     inline void route1() {
         #if DRV_MODE == TANK_DRV
         auton::set_intake(-INTK_RPM); // spin roller
-        auton::advance_straight(-WHEEL_RPM*0.5, 0.5);
+        auton::advance_time(-WHEEL_RPM*0.3, 0.5);
         auton::set_intake(0);
         auton::turn_angl(90); // set up shoot
+        auton::wait(3);
         auton::set_indexer(true); // shoot
-        auton::wait(1);
+        auton::wait(3);
         auton::set_indexer(false);
-        auton::wait(1);
+        auton::wait(3);
         auton::set_indexer(true);
-        auton::wait(1);
+        auton::wait(3);
         auton::set_indexer(false);
-        
+        auton::set_flywheel(0);
         #elif DRV_MODE == X_DRV
-        while (true) {
-            auton::slide_dist(TILE, 0, 150);
-            auton::wait(0.5);
-            auton::slide_dist(TILE, 180, 150);
-            auton::wait(0.5);
-        }
         #endif  
     }
 
@@ -34,7 +31,35 @@ namespace route {
         auton::advance_time(-WHEEL_RPM, 0.8); // go to roller
         auton::turn_to(90);
         auton::set_intake(-INTK_RPM); // spin roller
-        auton::advance_time(-WHEEL_RPM*0.5, 0.5);
+        auton::advance_time(-WHEEL_RPM*0.3, 0.5);
+        auton::set_intake(0);
+        auton::set_flywheel(BLU_RPM); // set up shoot
+        auton::advance_time(WHEEL_RPM, 1);
+        auton::wait(3);
+        auton::set_indexer(true); // shoot
+        auton::wait(3);
+        auton::set_indexer(false);
+        auton::wait(3);
+        auton::set_indexer(true);
+        auton::wait(3);
+        auton::set_indexer(false);
+        auton::set_flywheel(0);
+        #elif DRV_MODE == X_DRV
+        #endif
+    }
+
+    // BACKUP ROUTES (low goal)
+
+    inline void route3() {
+    
+    }
+
+    inline void route4() {
+        #if DRV_MODE == TANK_DRV
+        auton::advance_time(-WHEEL_RPM, 0.8); // go to roller
+        auton::turn_to(90);
+        auton::set_intake(-INTK_RPM); // spin roller
+        auton::advance_time(-WHEEL_RPM*0.3, 0.5);
         auton::set_intake(0);
         auton::set_flywheel(BLU_RPM); // set up shoot
         auton::turn_to(0);
@@ -47,14 +72,8 @@ namespace route {
         auton::set_indexer(true);
         auton::wait(3);
         auton::set_indexer(false);
-
+        auton::set_flywheel(0);
         #elif DRV_MODE == X_DRV
-        while (true) {
-            auton::slide_dist(TILE, 0, 150);
-            auton::wait(0.5);
-            auton::slide_dist(TILE, 180, 150);
-            auton::wait(0.5);
-        }
         #endif
     }
 }
