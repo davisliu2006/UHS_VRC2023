@@ -3,8 +3,6 @@
 #include "../globals.hpp"
 #include "sensing.hpp"
 
-#define PRECISE_MODE true // use velocity based flywheel and intake
-
 // probably useless definitions
 inline vector2 blue_hi = {-2.5, -2.5};
 inline vector2 red_lo = {-1, -1};
@@ -79,7 +77,6 @@ namespace auton {
         while (dt > 0) {
             sens::update();
             double rotdiff = angl_180(rot-sens::rot)/TURN_MAXDIFF;
-            rotdiff = min(1.0, rotdiff);
             flmotor.move_velocity(vel+rotdiff*corr);
             frmotor.move_velocity(vel-rotdiff*corr);
             rlmotor.move_velocity(vel+rotdiff*corr);
@@ -153,8 +150,8 @@ namespace auton {
         double rotdiff_raw;
         while ((rotdiff_raw = abs(angl_180(heading-sens::rot))) > TURN_MINDIFF) {
             sens::update();
-            double rotdiff = (rotdiff_raw-sign(rotdiff_raw)*TURN_MINDIFF)
-                /(TURN_MAXDIFF-TURN_MINDIFF);
+            double rotdiff = (rotdiff_raw-sign(rotdiff_raw)*TURN_MINDIFF*0.5)
+                /(TURN_MAXDIFF-TURN_MINDIFF*0.5);
             rotdiff = min(1.0, rotdiff);
             turn(rotdiff*WHEEL_RPM*mult);
         }
@@ -182,22 +179,11 @@ namespace auton {
     }
 
     // intake
-    /*
-    Range for val is [-127, 127].
-    */
-    inline void set_intake(int val) {
-        #if PRECISE_MODE
-        val = double(val)/MTR_MAX*INTK_RPM;
-        intake.move_velocity(val);
-        #else
-        intake.move(val);
-        #endif
+    inline void set_intake(int vel) {
+        intake.move_velocity(vel);
     }
-    /*
-    Range for val is [-127, 127].
-    */
-    inline void intake_for(int val, double dt) {
-        set_intake(val);
+    inline void intake_for(int vel, double dt) {
+        set_intake(vel);
         wait(dt);
         set_intake(0);
     }
@@ -209,8 +195,11 @@ namespace auton {
     */
     #if INDEXER_TYPE == TYPE_MTR
     inline void set_indexer(bool val) {
-        if (val) {indexer.move_absolute(60, INDX_RPM);}
-        else {indexer.move_absolute(0, INDX_RPM);}
+        if (val) {
+            indexer.move_absolute(60, INDX_RPM);
+        } else {
+            indexer.move_absolute(0, INDX_RPM);
+        }
     }
     #elif INDEXER_TYPE == TYPE_PNEU
     inline void set_indexer(bool val) {
@@ -220,23 +209,18 @@ namespace auton {
     /*
     Range for val is [-127, 127].
     */
-    inline void set_flywheel(int val) {
-        #if PRECISE_MODE
-        if (val == 0) { // no braking for flywheel
+    inline void set_flywheel(int vel) {
+        if (vel == 0) { // no braking for flywheel
             flywheel.move(0);
         } else {
-            val = double(val)/MTR_MAX*BLU_RPM;
-            flywheel.move_velocity(val);
+            flywheel.move_velocity(vel);
         }
-        #else
-        flywheel.move(vel);
-        #endif
     }
     /*
     Range for val is [-127, 127].
     */
-    inline void shoot(int val, int n = 1) {
-        set_flywheel(val);
+    inline void shoot(int vel, int n = 1) {
+        set_flywheel(vel);
         set_indexer(false);
         while (n-- > 0) {
             wait(2);
