@@ -7,8 +7,9 @@
 namespace route {
     // NORMAL ROUTES (high goal)
 
-    inline void route1() {
+    inline void close_hi() {
         #if DRV_MODE == TANK_DRV
+        auton::set_flywheel(BLU_RPM); // pre-accelerate
         // spin roller
         auton::set_intake(-INTK_RPM);
         auton::advance_time(-WHEEL_RPM*0.3, 0.5);
@@ -21,8 +22,9 @@ namespace route {
         #endif  
     }
 
-    inline void route2() {
+    inline void far_hi() {
         #if DRV_MODE == TANK_DRV
+        auton::set_flywheel(BLU_RPM); // pre-accelerate
         // go to roller
         auton::advance_time(-WHEEL_RPM, 0.8);
         auton::turn_to(90);
@@ -31,7 +33,6 @@ namespace route {
         auton::advance_time(-WHEEL_RPM*0.3, 0.5);
         auton::set_intake(0);
         // set up shoot
-        auton::set_flywheel(BLU_RPM);
         auton::advance_time(WHEEL_RPM, 1);
         // shoot
         auton::shoot(BLU_RPM, 2);
@@ -41,12 +42,13 @@ namespace route {
 
     // BACKUP ROUTES (low goal)
 
-    inline void route3() {
+    inline void close_lo() {
     
     }
 
-    inline void route4() {
+    inline void far_lo() {
         #if DRV_MODE == TANK_DRV
+        auton::set_flywheel(BLU_RPM); // pre-accelerate
         // go to roller
         auton::advance_time(-WHEEL_RPM, 0.8);
         auton::turn_to(90);
@@ -55,7 +57,6 @@ namespace route {
         auton::advance_time(-WHEEL_RPM*0.3, 0.5);
         auton::set_intake(0);
         // set up shoot
-        auton::set_flywheel(BLU_RPM);
         auton::turn_to(0);
         auton::advance_time(WHEEL_RPM, 1);
         // shoot
