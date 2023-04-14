@@ -219,14 +219,20 @@ namespace auton {
     /*
     Range for val is [-127, 127].
     */
-    inline void shoot(int vel, int n = 1) {
+    inline void shoot(int vel, double min_pct, const double max_wait, int n = 1) {
         set_flywheel(vel);
         set_indexer(false);
         while (n-- > 0) {
-            wait(2);
-            wait_until([&]() {return flywheel.get_actual_velocity() >= vel*0.9;});
+            double wt = max_wait;
+            wait(2); wt -= 2;
+            wait_until([&]() {
+                return flywheel.get_actual_velocity() >= vel*min_pct
+                    || (wt -= sens::dt) <= 0;
+            });
+            set_flywheel(vel);
+            auton::wait(0.2);
             set_indexer(true);
-            wait(2);
+            wait(1);
             set_indexer(false);
         }
         set_flywheel(0);

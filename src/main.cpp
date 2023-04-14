@@ -99,8 +99,8 @@ void autonomous() {
 		case BLUE_3: {route::close_lo(); break;}
 		case RED_4: {route::far_lo(); break;}
 		case BLUE_4: {route::far_lo(); break;}
-		case RED_5: {break;}
-		case BLUE_5: {break;}
+		case RED_5: {route::test(); break;}
+		case BLUE_5: {route::test(); break;}
 		case SKILLS: {route::skills(); break;}
 	}
 }
