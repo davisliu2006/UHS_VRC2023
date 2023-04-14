@@ -198,7 +198,7 @@ namespace auton {
         if (val) {
             indexer.move_absolute(60, INDX_RPM);
         } else {
-            indexer.move_absolute(0, INDX_RPM);
+            indexer.move_absolute(5, INDX_RPM);
         }
     }
     #elif INDEXER_TYPE == TYPE_PNEU
@@ -245,6 +245,7 @@ namespace auton {
         auton::wait(0.2);
         indexer.move(0);
         indexer.tare_position();
+        indexer.move_absolute(5, INDX_RPM);
         #endif
     }
 }

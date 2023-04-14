@@ -78,7 +78,7 @@ inline void opcontrol_start() {
         if (master.get_digital(pros::E_CONTROLLER_DIGITAL_UP)) {
             indexer.move_absolute(60, INDX_RPM);
         } else {
-            indexer.move_absolute(0, INDX_RPM);
+            indexer.move_absolute(5, INDX_RPM);
         }
         #elif INDEXER_TYPE == TYPE_PNEU
         if (master.get_digital(pros::E_CONTROLLER_DIGITAL_UP)) {
