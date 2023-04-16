@@ -56,10 +56,11 @@ const double WHEEL_R  = 2; // inches
 const double WHEEL_C = WHEEL_R*M_PI*2;
 inline double WHEEL_RPM = 0; // initialize later
 inline double WHEEL_RPS = 0; // initialize later
+inline double WHEEL_LSPD = 0; // initialize later
 const double DRV_R = 9;
 const double DRV_C = DRV_R*M_PI*2;
-const double DRV_RPS = WHEEL_C*GRN_RPS/DRV_C;
-const double DRV_DPS = DRV_RPS*360;
+// const double DRV_RPS = WHEEL_C*GRN_RPS/DRV_C;
+// const double DRV_DPS = DRV_RPS*360;
 inline pros::Motor flmotor(17, pros::E_MOTOR_GEAR_BLUE, true);
 inline pros::Motor frmotor(20, pros::E_MOTOR_GEAR_BLUE);
 inline pros::Motor rlmotor(18, pros::E_MOTOR_GEAR_BLUE, true);

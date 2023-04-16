@@ -34,6 +34,7 @@ void initialize() {
     rrmotor.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
     WHEEL_RPM = gear_mp[flmotor.get_gearing()];
     WHEEL_RPS = WHEEL_RPM/60;
+    WHEEL_LSPD = WHEEL_RPS*WHEEL_C;
     cout << "WHEEL_RPM: " << WHEEL_RPM << '\n';
 
     // intake

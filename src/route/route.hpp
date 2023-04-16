@@ -43,12 +43,12 @@ namespace route {
         #if DRV_MODE == TANK_DRV
         auton::set_flywheel(BLU_RPM); // pre-accelerate
         // go to roller
-        auton::advance_time(-WHEEL_RPM, 0.8);
+        auton::advance_time(-WHEEL_RPM, TILE/WHEEL_LSPD);
         auton::turn_to(90);
         // spin roller
         spin_roller();
         // set up shoot
-        auton::advance_time(WHEEL_RPM, 0.5);
+        auton::advance_time(WHEEL_RPM, TILE*0.5/WHEEL_LSPD);
         // shoot
         auton::shoot(BLU_RPM*0.9, 0.95, 5, 2);
         get_disks();
@@ -68,13 +68,13 @@ namespace route {
         #if DRV_MODE == TANK_DRV
         auton::set_flywheel(BLU_RPM); // pre-accelerate
         // go to roller
-        auton::advance_time(-WHEEL_RPM, 0.8);
+        auton::advance_time(-WHEEL_RPM, TILE/WHEEL_LSPD);
         auton::turn_to(90);
         // spin roller
         spin_roller();
         // set up shoot
         auton::turn_to(0);
-        auton::advance_time(WHEEL_RPM, 0.5);
+        auton::advance_time(WHEEL_RPM, TILE*0.5/WHEEL_LSPD);
         // shoot
         auton::shoot(BLU_RPM*0.9, 0.95, 5, 2);
         get_disks();

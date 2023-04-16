@@ -206,9 +206,6 @@ namespace auton {
         indexer.set_value(pos*ADI_MAX);
     }
     #endif
-    /*
-    Range for val is [-127, 127].
-    */
     inline void set_flywheel(int vel) {
         if (vel == 0) { // no braking for flywheel
             flywheel.move(0);
@@ -216,9 +213,6 @@ namespace auton {
             flywheel.move_velocity(vel);
         }
     }
-    /*
-    Range for val is [-127, 127].
-    */
     inline void shoot(int vel, double min_pct, const double max_wait, int n = 1) {
         set_flywheel(vel);
         set_indexer(false);
@@ -248,7 +242,7 @@ namespace auton {
         did_init = true;
         #if INDEXER_TYPE == TYPE_MTR
         indexer.move(-MTR_MAX);
-        auton::wait(0.2);
+        wait(0.2);
         indexer.move(0);
         indexer.tare_position();
         indexer.move_absolute(5, INDX_RPM);
