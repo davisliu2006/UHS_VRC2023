@@ -36,6 +36,7 @@ namespace display {
         }
     }
 
+    // udpate
     inline void update() {
         displ_temp();
     }

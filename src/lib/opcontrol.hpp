@@ -10,6 +10,7 @@ inline double joymap(int x){
     return temp*sqrt(abs(temp));
 }
 
+// start opcontrol
 inline bool is_opcontrol = false;
 inline void opcontrol_start() {
     is_opcontrol = true;
