@@ -16,7 +16,6 @@ namespace display {
     };
     inline void displ_temp() {
         if (displ_time >= delay) {
-            // motor temperatures
             for (int i = 0; i < temp_data.size(); i++) {
                 auto& line = temp_data[i];
                 pros::lcd::clear_line(i+1);
@@ -28,7 +27,6 @@ namespace display {
             }
             displ_time = 0;
         } else {
-            // motor temperatures
             for (auto& line: temp_data) {
                 for (auto& [mtr, name, temp]: line) {
                     temp = mtr.get_temperature();

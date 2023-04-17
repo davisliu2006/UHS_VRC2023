@@ -17,6 +17,7 @@ namespace sens {
     inline double t = 0;
     inline double dt = 0;
     
+    // reset
     inline void reset() {
         if ((inertial.get_status() & pros::c::E_IMU_STATUS_ERROR) == pros::c::E_IMU_STATUS_ERROR) {
             pros::lcd::clear_line(0);
@@ -32,6 +33,10 @@ namespace sens {
         t = time(); // IMPORTANT: timer does not reset
     }
 
+    // advanced (defined later)
+    void update_dynamic_avg();
+
+    // update
     inline void update() {
         // timing
         double t0 = t;
@@ -46,11 +51,18 @@ namespace sens {
         // orientation
         rot = inertial.get_heading();
         vrot = inertial.get_gyro_rate().z;
+
+        // advanced
+        // update_dynamic_avg();
     }
 };
 
 // ADVANCED
 
+// periodic averages
+/*
+Measures the average of func() over fixed intervals.
+*/
 struct periodic_avg {
     double interval = 0;
     double curr_time = 0;
@@ -60,11 +72,17 @@ struct periodic_avg {
     public:
     function<double()> func;
 
+    static set<periodic_avg*> instances;
+
     periodic_avg(double interval1, function<double()> func1) {
         interval = interval1;
         func = func1;
+        instances.insert(this);
     }
-        
+    ~periodic_avg() {
+        instances.erase(this);
+    }
+
     void update() {
         if (curr_time >= interval) {
             val = _newval/curr_time;
@@ -75,8 +93,14 @@ struct periodic_avg {
             curr_time += sens::dt;
         }
     }
-};
 
+    static void update_all() {
+        for (auto* ins: instances) {ins->update();}
+    }
+};
+/*
+Measures the average change/time of func() over fixed intervals.
+*/
 struct periodic_davg {
     double interval = 0;
     double curr_time = 0;
@@ -84,12 +108,18 @@ struct periodic_davg {
     double integral = 0;
     function<double()> func;
 
+    static set<periodic_davg*> instances;
+
     periodic_davg(double interval1, function<double()> func1) {
         interval = interval1;
         func = func1;
         integral = func();
+        instances.insert(this);
     }
-        
+    ~periodic_davg() {
+        instances.erase(this);
+    }
+
     void update() {
         if (curr_time >= interval) {
             double integral0 = integral;
@@ -100,4 +130,30 @@ struct periodic_davg {
             curr_time += sens::dt;
         }
     }
+
+    static void update_all() {
+        for (auto* ins: instances) {ins->update();}
+    }
 };
+
+// sliding averages
+/*
+Measures the average of func() over the last x seconds.
+*/
+struct [[deprecated]] sliding_avg {
+    
+};
+/*
+Measures the average change/time of func() over the last x seconds.
+*/
+struct [[deprecated]] sliding_davg {
+
+};
+
+namespace sens {
+    // dynamic average update
+    inline void update_dynamic_avg() {
+        periodic_avg::update_all();
+        periodic_davg::update_all();
+    }
+}
