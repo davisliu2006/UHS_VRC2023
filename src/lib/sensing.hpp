@@ -19,7 +19,8 @@ namespace sens {
     
     inline void reset() {
         if ((inertial.get_status() & pros::c::E_IMU_STATUS_ERROR) == pros::c::E_IMU_STATUS_ERROR) {
-            pros::lcd::print(1, "Warning: No inertial attatched.");
+            pros::lcd::clear_line(0);
+            pros::lcd::print(0, "Warning: No inertial attatched.");
             return;
         }
         inertial.reset();
@@ -45,5 +46,58 @@ namespace sens {
         // orientation
         rot = inertial.get_heading();
         vrot = inertial.get_gyro_rate().z;
+    }
+};
+
+// ADVANCED
+
+struct periodic_avg {
+    double interval = 0;
+    double curr_time = 0;
+    double val = 0;
+    private:
+    double _newval = 0;
+    public:
+    function<double()> func;
+
+    periodic_avg(double interval1, function<double()> func1) {
+        interval = interval1;
+        func = func1;
+    }
+        
+    void update() {
+        if (curr_time >= interval) {
+            val = _newval/curr_time;
+            _newval = 0;
+            curr_time = 0;
+        } else {
+            _newval += func()*sens::dt;
+            curr_time += sens::dt;
+        }
+    }
+};
+
+struct periodic_davg {
+    double interval = 0;
+    double curr_time = 0;
+    double val = 0;
+    double integral = 0;
+    function<double()> func;
+
+    periodic_davg(double interval1, function<double()> func1) {
+        interval = interval1;
+        func = func1;
+        integral = func();
+    }
+        
+    void update() {
+        if (curr_time >= interval) {
+            double integral0 = integral;
+            integral = func();
+            val = (integral-integral0)/curr_time;
+            curr_time = 0;
+        } else {
+            curr_time += sens::dt;
+        }
     }
 };

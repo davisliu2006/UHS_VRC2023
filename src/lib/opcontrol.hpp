@@ -2,6 +2,7 @@
 
 #include "../globals.hpp"
 #include "sensing.hpp"
+#include "displays.hpp"
 
 // maps joystick position to drive speed
 inline double joymap(int x){
@@ -16,6 +17,7 @@ inline void opcontrol_start() {
     // logging
     double print_time = 0;
     double print_delay = 1; // required to prevent output lag
+    display::update();
 
     // drivetrain
     int drv_rev = 1; // reverse drivetrain
