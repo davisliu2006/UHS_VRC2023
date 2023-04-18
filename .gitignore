@@ -5,6 +5,7 @@
 bin/
 firmware/
 include/
+src/test/
 
 # files
 .DS_Store

@@ -93,7 +93,6 @@ namespace auton {
         rrmotor.move_relative(ang, vel);
         while (abs(flmotor.get_target_velocity()) > 1) {
             sens::update();
-            // pros::delay(10);
         }
         stop();
     }
@@ -123,7 +122,6 @@ namespace auton {
         rrmotor.move_relative(angx, velx);
         while (abs(flmotor.get_target_velocity()) > 1) {
             sens::update();
-            // pros::delay(10);
         }
         stop();
     }
@@ -196,9 +194,9 @@ namespace auton {
     #if INDEXER_TYPE == TYPE_MTR
     inline void set_indexer(bool val) {
         if (val) {
-            indexer.move_absolute(60, INDX_RPM);
+            indexer.move_absolute(60, INDX_RPM*0.8);
         } else {
-            indexer.move_absolute(5, INDX_RPM);
+            indexer.move_absolute(5, INDX_RPM*0.8);
         }
     }
     #elif INDEXER_TYPE == TYPE_PNEU

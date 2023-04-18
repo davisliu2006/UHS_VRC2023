@@ -33,6 +33,7 @@ inline void opcontrol_start() {
             // cout << sens::t << ' ' << sens::dt << '\n';
             // cout << sens::rot << ' ' << sens::rot_trg << '\n';
             cout << indexer.get_position() << '\n';
+            master.print(0, 0, "Indexer Temp: %.2f\n", indexer.get_temperature());
             print_time -= print_delay;
         }
 
@@ -79,9 +80,10 @@ inline void opcontrol_start() {
         }
         #if INDEXER_TYPE == TYPE_MTR
         if (master.get_digital(pros::E_CONTROLLER_DIGITAL_UP)) {
-            indexer.move_absolute(60, INDX_RPM);
+            indexer.move_absolute(60, INDX_RPM*0.8);
         } else {
-            indexer.move_absolute(5, INDX_RPM);
+            if (indexer.get_position() <= 5) {indexer.move(0);}
+            else {indexer.move_absolute(0, INDX_RPM*0.8);}
         }
         #elif INDEXER_TYPE == TYPE_PNEU
         if (master.get_digital(pros::E_CONTROLLER_DIGITAL_UP)) {
