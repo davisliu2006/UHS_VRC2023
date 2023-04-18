@@ -4,9 +4,9 @@
 
 namespace sens {
     //positional
-    inline double x = 0; inline double y = 0;
-    inline double vx = 0; inline double vy = 0;
-    inline double ax = 0; inline double ay = 0;
+    inline double x = 0, y = 0;
+    inline double vx = 0, vy = 0;
+    inline double ax = 0, ay = 0;
 
     // rotational
     inline double rot = 0;
