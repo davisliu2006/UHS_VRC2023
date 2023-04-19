@@ -26,3 +26,7 @@ template <class type>
 inline type sign(type x) {
     return (x >= 0? 1 : -1);
 }
+template <class type>
+inline type in_range(type var, type lo, type hi) {
+    return lo <= var && var <= hi;
+}
