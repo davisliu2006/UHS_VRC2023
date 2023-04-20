@@ -122,5 +122,6 @@ void autonomous() {
 void opcontrol() {
 	cout << "BEGIN OPCONTROL\n";
     if (!auton::did_init) {auton::init();}
+    auton::need_sensreset = true;
 	opcontrol_start();
 }
