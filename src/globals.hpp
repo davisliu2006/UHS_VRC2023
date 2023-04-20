@@ -53,7 +53,7 @@ inline map<int,int> gear_mp = {
 const int ADI_MAX = 4095;
 
 // drivetrain
-const double WHEEL_R  = 2; // inches
+const double WHEEL_R  = 1.0*60/84; // inches
 const double WHEEL_C = WHEEL_R*M_PI*2;
 inline double WHEEL_RPM = 0; // initialize later
 inline double WHEEL_RPS = 0; // initialize later

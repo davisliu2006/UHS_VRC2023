@@ -33,7 +33,7 @@ inline void opcontrol_start() {
             // cout << sens::t << ' ' << sens::dt << '\n';
             // cout << sens::rot << ' ' << sens::rot_trg << '\n';
             cout << indexer.get_position() << '\n';
-            master.print(0, 0, "Indexer Temp: %.2f\n", indexer.get_temperature());
+            master.print(0, 0, "Flywheel: %.2f\n", flywheel.get_actual_velocity());
             print_time -= print_delay;
         }
 
