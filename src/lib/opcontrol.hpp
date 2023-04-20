@@ -22,6 +22,7 @@ inline void opcontrol_start() {
 
     // drivetrain
     int drv_rev = 1; // reverse drivetrain
+    bool drv_rev_pressed = false;
 
     while (is_opcontrol) {
         // sensing
@@ -63,18 +64,10 @@ inline void opcontrol_start() {
         }
 
         // shooter
-        if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
-            if (flywheel.get_actual_velocity() < BLU_RPM*0.4 && false) {
-                flywheel.move(MTR_MAX);
-            } else {
-                flywheel.move_velocity(BLU_RPM*0.5);
-            }
-        } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
-            if (flywheel.get_actual_velocity() > -BLU_RPM*0.4 && false) {
-                flywheel.move(-MTR_MAX);
-            } else {
-                flywheel.move_velocity(-BLU_RPM*0.5);
-            }
+        if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) { // close shot
+            flywheel.move_velocity(BLU_RPM*0.5);
+        } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) { // far shot
+            flywheel.move_velocity(BLU_RPM*0.8);
         } else {
             flywheel.move(0);
         }
@@ -94,10 +87,11 @@ inline void opcontrol_start() {
         #endif
 
         // drivetrain reverse
-        if (master.get_digital(pros::E_CONTROLLER_DIGITAL_X)) { // shooter front
-            drv_rev = 1;
-        } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_B)) { // intake front
-            drv_rev = -1;
+        if (master.get_digital(pros::E_CONTROLLER_DIGITAL_B)) { // toggle
+            if (!drv_rev_pressed) {drv_rev *= -1;}
+            drv_rev_pressed = true;
+        } else {
+            drv_rev_pressed = false;
         }
 
         // expansion
