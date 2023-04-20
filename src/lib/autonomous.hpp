@@ -236,7 +236,9 @@ namespace auton {
     inline void init() {
         did_init = true;
         // sensing
-        if (need_sensreset) {sens::reset();}
+        if (need_sensreset && pros::competition::is_autonomous()) {
+            sens::reset();
+        }
         need_sensreset = false;
         // indexer
         #if INDEXER_TYPE == TYPE_MTR

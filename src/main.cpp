@@ -61,7 +61,8 @@ void initialize() {
  * the robot is enabled, this task will exit.
  */
 void disabled() {
-
+    sens::reset();
+    auton::need_sensreset = false;
 }
 
 /**
