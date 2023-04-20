@@ -28,7 +28,7 @@ namespace route {
 
     inline void close_hi() {
         #if DRV_MODE == TANK_DRV
-        auton::set_flywheel(BLU_RPM); // pre-accelerate
+        auton::set_flywheel(BLU_RPM*0.9); // pre-accelerate
         // spin roller
         spin_roller();
         // set up shoot
@@ -43,7 +43,7 @@ namespace route {
 
     inline void far_hi() {
         #if DRV_MODE == TANK_DRV
-        auton::set_flywheel(BLU_RPM); // pre-accelerate
+        auton::set_flywheel(BLU_RPM*0.9); // pre-accelerate
         // go to roller
         auton::advance_time(-WHEEL_RPM, 0.8);
         auton::turn_to(90);
@@ -62,7 +62,7 @@ namespace route {
 
     inline void close_lo() {
         #if DRV_MODE == TANK_DRV
-        auton::set_flywheel(BLU_RPM); // pre-accelerate
+        auton::set_flywheel(BLU_RPM*0.9); // pre-accelerate
         // spin roller
         spin_roller();
         // set up shoot
@@ -76,7 +76,7 @@ namespace route {
 
     inline void far_lo() {
         #if DRV_MODE == TANK_DRV
-        auton::set_flywheel(BLU_RPM); // pre-accelerate
+        auton::set_flywheel(BLU_RPM*0.9); // pre-accelerate
         // go to roller
         auton::advance_time(-WHEEL_RPM, 0.8);
         auton::turn_to(90);
@@ -93,7 +93,9 @@ namespace route {
     }
 
     inline void test() {
-        auton::shoot(BLU_RPM*0.8, 0.95, 3, 2);
+        auton::set_flywheel(BLU_RPM*0.9); // pre-accelerate
+        auton::wait(1);
+        auton::shoot(BLU_RPM*0.9, 0.95, 3, 2);
     }
 
     // SKILLS ROUTE
