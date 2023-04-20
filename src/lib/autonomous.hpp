@@ -60,15 +60,29 @@ namespace auton {
         rrmotor.move_velocity(0);
     }
 
-    // move distance
-    #if DRV_MODE == TANK_DRV
-    inline void advance_time(double vel, double dt) {
+    // wait with background processing
+    inline void wait(double dt) {
         sens::update();
-        advance(vel);
         while (dt > 0) {
             sens::update();
             dt -= sens::dt;
         }
+    }
+    inline void wait_until(function<bool()> func) {
+        sens::update();
+        while (!func()) {
+            sens::update();
+        }
+    }
+    inline void run_for(double dt, function<bool()> func) {
+        
+    }
+
+    // move distance
+    #if DRV_MODE == TANK_DRV
+    inline void advance_time(double vel, double dt) {
+        advance(vel);
+        wait(dt);
         stop();
     }
     inline void advance_straight(double vel, double dt, double corr = 1) {
@@ -159,21 +173,6 @@ namespace auton {
     inline void turn_angl(double angle) {
         sens::update();
         turn_to(angl_360(sens::rot+angle));
-    }
-
-    // wait with background processing
-    inline void wait(double t) {
-        sens::update();
-        while (t > 0) {
-            sens::update();
-            t -= sens::dt;
-        }
-    }
-    inline void wait_until(function<bool()> func) {
-        sens::update();
-        while (!func()) {
-            sens::update();
-        }
     }
 
     // intake
