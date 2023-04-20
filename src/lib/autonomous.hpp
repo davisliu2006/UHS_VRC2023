@@ -74,9 +74,6 @@ namespace auton {
             sens::update();
         }
     }
-    inline void run_for(double dt, function<bool()> func) {
-        
-    }
 
     // move distance
     #if DRV_MODE == TANK_DRV
