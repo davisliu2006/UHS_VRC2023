@@ -127,4 +127,4 @@ enum AutonEnum {
     RED_1 = 1, RED_2 = 2, RED_3 = 3, RED_4 = 4, RED_5 = 5,
     NOTHING = 10, SKILLS = 0
 };
-inline int autonSelection = SKILLS; // specifies the default auton selected
+inline int autonSelection = NOTHING; // specifies the default auton selected

@@ -19,7 +19,7 @@ namespace route {
         auton::set_intake(200);
         auton::advance_time(-WHEEL_RPM, 2.53);
         auton::advance_time(WHEEL_RPM, 0.5);
-
+        // shoot
         auton::turn_to(135);
         auton::shoot(BLU_RPM*0.9, 0.95, 3, 3);
     }
@@ -32,7 +32,9 @@ namespace route {
         // spin roller
         spin_roller();
         // set up shoot
-        auton::turn_to(90);
+        auton::turn_to(45);
+        auton::advance_time(WHEEL_RPM, 2);
+        auton::turn_to(-45);
         // shoot
         auton::shoot(BLU_RPM*0.9, 0.95, 3, 2);
         #elif DRV_MODE == X_DRV
@@ -58,7 +60,7 @@ namespace route {
         #endif
     }
 
-    inline void close_lo() { // incomplete
+    inline void close_lo() {
         #if DRV_MODE == TANK_DRV
         auton::set_flywheel(BLU_RPM); // pre-accelerate
         // spin roller
@@ -66,6 +68,8 @@ namespace route {
         // set up shoot
         auton::turn_to(90);
         auton::advance_time(WHEEL_RPM, 1);
+        // shoot
+        auton::shoot(BLU_RPM*0.9, 0.95, 3, 2);
         #elif DRV_MODE == X_DRV
         #endif
     }
