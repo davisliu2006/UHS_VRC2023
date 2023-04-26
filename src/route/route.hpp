@@ -10,6 +10,7 @@ namespace route {
         auton::set_intake(-INTK_RPM);
         auton::advance_time(-WHEEL_RPM*0.3, 0.4);
         auton::set_intake(0);
+        auton::advance_time(WHEEL_RPM, 0.2);
     }
 
     inline void get_disks() {
