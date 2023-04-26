@@ -139,7 +139,7 @@ namespace auton {
     #endif
     
     // turn angle
-    #define TURN_IMPL 2
+    #define TURN_IMPL 1
     #if TURN_IMPL == 1 // ROT_MINDIFF only changes tolerance, does not change scaling
     inline void turn_to(double heading, double mult = 1) {
         sens::update();
