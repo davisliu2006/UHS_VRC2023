@@ -7,7 +7,8 @@
 
 namespace route {
     // SUBROUTES
-    void autonPIDTest() {
+    
+    inline void autonPIDTest() {
         auton::vector center = {};
         auton::moveDistance(8, 2000, &center);
         auton::moveDistance(6, -2000, &center);
