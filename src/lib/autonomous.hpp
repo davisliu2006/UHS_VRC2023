@@ -39,7 +39,7 @@ namespace auton {
         double x = 0, y = 0;
         double dist = 0, heading = 0, desiredHeading = 0;
     }; 
-    double get_heading() {
+    inline double get_heading() {
         double heading = inertial.get_heading();
         if (heading > 180)
             heading -= 360;  // sets the heading to a neg val if the robot's heading is counterclockwise
