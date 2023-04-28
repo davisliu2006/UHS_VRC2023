@@ -102,7 +102,7 @@ void autonomous() {
 		case RED_4: {route::far_lo(); break;}
 		case BLUE_4: {route::far_lo(); break;}
 		case RED_5: {route::test(); break;}
-		case BLUE_5: {route::test(); break;}
+		case BLUE_5: {route::autonPIDTest(); break;}
 		case SKILLS: {route::skills(); break;}
 	}
 }

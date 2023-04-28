@@ -1,16 +1,30 @@
 #pragma once
 
+#include "../include/main.h"
 #include "../globals.hpp"
 #include "../lib/autonomous.hpp"
+#include "../lib/pid.hpp"
 
 namespace route {
     // SUBROUTES
+    void autonPIDTest() {
+        auton::vector center = {};
+        auton::moveDistance(8, 2000, &center);
+        auton::moveDistance(6, -2000, &center);
+    }
 
     inline void spin_roller() {
         auton::set_intake(-INTK_RPM);
-        auton::advance_time(-WHEEL_RPM*0.1, 0.15);
+        auton::advance_time(-WHEEL_RPM*0.3, 0.4);
         auton::set_intake(0);
-        auton::advance_time(WHEEL_RPM, 0.1);
+        auton::advance_time(WHEEL_RPM, 0.2);
+    }
+
+    inline void spin_roller_far() {
+        auton::set_intake(-INTK_RPM);
+        auton::advance_time(-WHEEL_RPM*0.3, 0.6);
+        auton::set_intake(0);
+        auton::advance_time(WHEEL_RPM, 0.2);
     }
 
     inline void get_disks() {
@@ -46,11 +60,10 @@ namespace route {
         #if DRV_MODE == TANK_DRV
         auton::set_flywheel(BLU_RPM*0.9); // pre-accelerate
         // go to roller
-        auton::advance_time(-WHEEL_RPM, 0.65);
+        auton::advance_time(-WHEEL_RPM, 0.8);
         auton::turn_to(90);
-        auton::advance_time(-WHEEL_RPM, 0.3);
         // spin roller
-        spin_roller();
+        spin_roller_far();
         // set up shoot
         auton::turn_to(45);
         auton::advance_time(WHEEL_RPM, 2);
@@ -80,9 +93,8 @@ namespace route {
         #if DRV_MODE == TANK_DRV
         auton::set_flywheel(BLU_RPM*0.9); // pre-accelerate
         // go to roller
-        auton::advance_time(-WHEEL_RPM, 0.65);
+        auton::advance_time(-WHEEL_RPM, 0.8);
         auton::turn_to(90);
-        auton::advance_time(-WHEEL_RPM, 0.3);
         // spin roller
         spin_roller();
         // set up shoot

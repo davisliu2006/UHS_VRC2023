@@ -12,7 +12,7 @@ namespace display {
         {{flmotor, "FL", 0}, {frmotor, "FR", 0}},
         {{rlmotor, "RL", 0}, {rrmotor, "RR", 0}},
         {{flywheel, "Flywheel", 0}, {indexer, "Indxer", 0}},
-        {{intake[0], "Intake 1", 0}, {intake[1], "Intake 2", 0}}
+        //{{intake[0], "Intake 1", 0}, {intake[1], "Intake 2", 0}}
     };
     inline void displ_temp() {
         if (displ_time >= delay) {
