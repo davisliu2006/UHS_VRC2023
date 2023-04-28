@@ -30,7 +30,7 @@ namespace vision {
     Set up code for the vision sensor.
     */
     inline void init() {
-        set<int> redteam_flags = {RED_1, RED_2, RED_3, RED_4, RED_5};
+        set<int> redteam_flags = {RED_CLOSE_HIGH, RED_CLOSE_FAR, RED_FAR_HIGH, RED_FAR_LOW, RED_5};
         if (redteam_flags.find(autonSelection) != redteam_flags.end()) {
             alliance = TEAM_RED;
         } else {

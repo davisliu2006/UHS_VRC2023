@@ -13,11 +13,11 @@ inline lv_res_t redBtnmAction(lv_obj_t *btnm, const char *txt) {
 	printf("red button: %s released\n", txt);
 	lv_theme_t *th = lv_theme_nemo_init(0, NULL);
 	lv_theme_set_current(th);
-	if (strcmp(txt, "Auton 1") == 0) {autonSelection = RED_1;}
-	if (strcmp(txt, "Auton 2") == 0) {autonSelection = RED_2;}
-	if (strcmp(txt, "Auton 3") == 0) {autonSelection = RED_3;}
-	if (strcmp(txt, "Auton 4") == 0) {autonSelection = RED_4;}
-	if (strcmp(txt, "Auton 5") == 0) {autonSelection = RED_5;}
+	if (strcmp(txt, "Close High") == 0) {autonSelection = RED_CLOSE_HIGH;}
+	if (strcmp(txt, "Close Low") == 0) {autonSelection = RED_CLOSE_FAR;}
+	if (strcmp(txt, "Far High") == 0) {autonSelection = RED_FAR_HIGH;}
+	if (strcmp(txt, "Far Low") == 0) {autonSelection = RED_FAR_LOW;}
+	if (strcmp(txt, "Solo AWP") == 0) {autonSelection = RED_SOLO_AWP;}
 	if (strcmp(txt, "Do Nothing") == 0) {autonSelection = NOTHING;}
 	return LV_RES_OK; // return OK because the button matrix is not deleted
 }
@@ -27,11 +27,11 @@ inline lv_res_t blueBtnmAction(lv_obj_t *btnm, const char *txt) {
 	printf("blue button: %s released\n", txt);
 	lv_theme_t *th = lv_theme_nemo_init(230, NULL);
 	lv_theme_set_current(th);
-	if (strcmp(txt, "Auton 1") == 0) {autonSelection = BLUE_1;}
-	if (strcmp(txt, "Auton 2") == 0) {autonSelection = BLUE_2;}
-	if (strcmp(txt, "Auton 3") == 0) {autonSelection = BLUE_3;}
-	if (strcmp(txt, "Auton 4") == 0) {autonSelection = BLUE_4;}
-	if (strcmp(txt, "Auton 5") == 0) {autonSelection = BLUE_5;}
+	if (strcmp(txt, "Close High") == 0) {autonSelection = BLUE_CLOSE_HIGH;}
+	if (strcmp(txt, "Close Low") == 0) {autonSelection = BLUE_CLOSE_LOW;}
+	if (strcmp(txt, "Far high") == 0) {autonSelection = BLUE_FAR_HIGH;}
+	if (strcmp(txt, "Far low") == 0) {autonSelection = BLUE_FAR_LOW;}
+	if (strcmp(txt, "Solo AWP") == 0) {autonSelection = BLUE_SOLO_AWP;}
 	if (strcmp(txt, "Do Nothing") == 0) {autonSelection = NOTHING;}
 	return LV_RES_OK;
 }

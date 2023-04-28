@@ -93,16 +93,16 @@ void autonomous() {
 	cout << "BEGIN AUTONOMOUS\n";
     auton::init();
 	switch (autonSelection) {
-		case RED_1: {route::close_hi(); break;}
-		case BLUE_1: {route::close_hi(); break;}
-		case RED_2: {route::far_hi(); break;}
-		case BLUE_2: {route::far_hi(); break;}
-		case RED_3: {route::close_lo(); break;}
-		case BLUE_3: {route::close_lo(); break;}
-		case RED_4: {route::far_lo(); break;}
-		case BLUE_4: {route::far_lo(); break;}
-		case RED_5: {route::test(); break;}
-		case BLUE_5: {route::autonPIDTest(); break;}
+		case RED_CLOSE_HIGH: {route::close_hi(); break;}
+		case BLUE_CLOSE_HIGH: {route::close_hi(); break;}
+		case RED_CLOSE_FAR: {route::close_lo(); break;}
+		case BLUE_CLOSE_LOW: {route::close_lo(); break;}
+		case RED_FAR_HIGH: {route::far_hi(); break;}
+		case BLUE_FAR_HIGH: {route::far_hi(); break;}
+		case RED_FAR_LOW: {route::far_lo(); break;}
+		case BLUE_FAR_LOW: {route::far_lo(); break;}
+		case RED_SOLO_AWP: {route::test(); break;}
+		case BLUE_SOLO_AWP: {route::autonPIDTest(); break;}
 		case SKILLS: {route::skills(); break;}
 	}
 }

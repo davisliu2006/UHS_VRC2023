@@ -70,7 +70,7 @@ namespace auton {
         rrmotor.move_velocity(y+x);
     }
     #endif    
-    void turn(const int baseLeftVolt, const int baseRightVolt, double desiredAngle, vector *pCentre) {  
+    inline void turn(const int baseLeftVolt, const int baseRightVolt, double desiredAngle, vector *pCentre) {  
         int prevErrorHeading = 0, integralHeading = 0;
         pCentre->desiredHeading = desiredAngle;
         double currAngle = inertial.get_heading();
@@ -133,15 +133,15 @@ namespace auton {
         }
     }
 
-    double leftMtrAvg() {
+    inline double leftMtrAvg() {
         return (flmotor.get_position()+rlmotor.get_position())/2;
     }
 
-    double rightMtrAvg() {
+    inline double rightMtrAvg() {
         return (frmotor.get_position()+rrmotor.get_position())/2;
     }
 
-    void moveDistance(const double desiredDist, const int volt, vector *pCenter, decltype(MOTOR_BRAKE_BRAKE) stopType = MOTOR_BRAKE_BRAKE) {
+    inline void moveDistance(const double desiredDist, const int volt, vector *pCenter, decltype(MOTOR_BRAKE_BRAKE) stopType = MOTOR_BRAKE_BRAKE) {
         double prevLeftPos = leftMtrAvg(), prevRightPos = rightMtrAvg();   // the previous motor encoder value of each side of the drive train
         double currDist = 0;
 
