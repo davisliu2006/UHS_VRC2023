@@ -1,7 +1,7 @@
 #include "globals.hpp"
-#include "selection.hpp"
-#include "lib/opcontrol.hpp"
+#include "display/main.hpp"
 #include "lib/autonomous.hpp"
+#include "lib/opcontrol.hpp"
 #include "route/route.hpp"
 
 /**
@@ -11,7 +11,7 @@
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
-	cout << "BEGIN INITIALIZE\n";
+    cout << "BEGIN INITIALIZE\n";
 
     // IMPORTANT: initialize all pneumatics to 0
     expansion.set_value(0);
@@ -20,8 +20,10 @@ void initialize() {
     #endif
 
     // lcd
-    pros::lcd::initialize();
-    selectorInit();
+    // pros::lcd::initialize();
+    display::init_all();
+    display::on_init();
+    // selectorInit();
 
     // drivetrain
     flmotor.set_encoder_units(pros::E_MOTOR_ENCODER_ROTATIONS);
@@ -61,6 +63,7 @@ void initialize() {
  * the robot is enabled, this task will exit.
  */
 void disabled() {
+    display::on_disable();
     sens::reset();
     auton::need_sensreset = false;
 }
@@ -75,7 +78,7 @@ void disabled() {
  * starts.
  */
 void competition_initialize() {
-
+    display::on_init();
 }
 
 /**
@@ -90,21 +93,20 @@ void competition_initialize() {
  * from where it left off.
  */
 void autonomous() {
-	cout << "BEGIN AUTONOMOUS\n";
+    cout << "BEGIN AUTONOMOUS\n";
+    display::on_auton();
     auton::init();
-	switch (autonSelection) {
-		case RED_CLOSE_HIGH: {route::close_hi(); break;}
-		case BLUE_CLOSE_HIGH: {route::close_hi(); break;}
-		case RED_CLOSE_FAR: {route::close_lo(); break;}
-		case BLUE_CLOSE_LOW: {route::close_lo(); break;}
-		case RED_FAR_HIGH: {route::far_hi(); break;}
-		case BLUE_FAR_HIGH: {route::far_hi(); break;}
-		case RED_FAR_LOW: {route::far_lo(); break;}
-		case BLUE_FAR_LOW: {route::far_lo(); break;}
-		case RED_SOLO_AWP: {route::test(); break;}
-		case BLUE_SOLO_AWP: {route::autonPIDTest(); break;}
-		case SKILLS: {route::skills(); break;}
-	}
+    static vector<function<void()>> route_mp = {
+        route::skills,
+        route::close_hi,
+        route::far_hi,
+        route::close_lo,
+        route::close_hi,
+        route::test
+    };
+    if (selection::route < route_mp.size()) {
+        route_mp[selection::route]();
+    }
 }
 
 /**
@@ -121,8 +123,9 @@ void autonomous() {
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-	cout << "BEGIN OPCONTROL\n";
+    cout << "BEGIN OPCONTROL\n";
+    display::on_opc();
     if (!auton::did_init) {auton::init();}
     auton::need_sensreset = true;
-	opcontrol_start();
+    opcontrol_start();
 }

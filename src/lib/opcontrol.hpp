@@ -2,7 +2,7 @@
 
 #include "../globals.hpp"
 #include "sensing.hpp"
-#include "displays.hpp"
+#include "../display/main.hpp"
 
 // maps joystick position to drive speed
 inline double joymap(int x){
@@ -37,6 +37,7 @@ inline void opcontrol_start() {
             master.print(0, 0, "Flywheel: %.2f\n", flywheel.get_position());
             print_time -= print_delay;
         }
+        dashboard::update();
 
         // drivetrain
         double x = joymap(master.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_X))*drv_rev;

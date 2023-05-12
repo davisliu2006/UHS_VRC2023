@@ -1,13 +1,10 @@
 #pragma once
 
 #include "../globals.hpp"
-#include "../selection.hpp"
 #include "autonomous.hpp"
+#include "../display/selection.hpp"
 
-namespace vision {
-    enum alliance_e {TEAM_RED, TEAM_BLUE};
-
-    /*
+namespace vision {/*
     Range factor for sensor. 
     Change lower if detects too much background color
     Change higher if detects too little of the goal 
@@ -17,7 +14,6 @@ namespace vision {
     const double HORIZONTAL_ERROR_ROOM = 4; //Change higher if too slow and change lower if not accurate enough
     const double VERTICIAL_ERROR_ROOM = 4; //Change higher if too slow and change lower if not accurate enough
     inline int objects = 0;
-    inline int alliance;
 
     //Initalize the vision sensor
     inline pros::Vision vsensor(21);
@@ -30,12 +26,7 @@ namespace vision {
     Set up code for the vision sensor.
     */
     inline void init() {
-        set<int> redteam_flags = {RED_CLOSE_HIGH, RED_CLOSE_FAR, RED_FAR_HIGH, RED_FAR_LOW, RED_5};
-        if (redteam_flags.find(autonSelection) != redteam_flags.end()) {
-            alliance = TEAM_RED;
-        } else {
-            alliance = TEAM_BLUE;
-        }
+        
     }
     inline void vision_shoot() {
         //Adds the red and blue colors to the sensor
@@ -44,9 +35,9 @@ namespace vision {
         objects = vsensor.get_object_count();
         pros::vision_object_s_t goal;
         if (objects >= 1) {
-            if (alliance == TEAM_RED) {
+            if (selection::alliance == TEAM_RED) {
                 goal = vsensor.get_by_sig(0, RED.id);
-            } else if (alliance == TEAM_BLUE) {
+            } else if (selection::alliance == TEAM_BLUE) {
                 goal = vsensor.get_by_sig(0, RED.id);
             }
         }
