@@ -35,7 +35,7 @@ namespace dashboard {
                 txt += name+": "+to_string(temp)+"°C";
                 txt += (j == line.size()-1? '\n' : '\t');
             }
-            pros::screen::print(pros::E_TEXT_SMALL, 5, 10+i*10, txt.c_str());
+            pros::screen::print(pros::E_TEXT_SMALL, 5, 10+i*20, txt.c_str());
         }
     }
 
