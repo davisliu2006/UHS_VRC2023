@@ -56,6 +56,7 @@ namespace display {
 
         bool enabled = false;
         set<Button*> buttons;
+        set<Label*> labels;
 
         GUILayer() {
             instances.insert(this);
@@ -66,6 +67,7 @@ namespace display {
         
         void draw() {
             for (Button* btn: buttons) {btn->draw();}
+            for (Label* lbl: labels) {lbl->draw();}
         }
         void on_press(int x, int y) {
             for (Button* btn: buttons) {

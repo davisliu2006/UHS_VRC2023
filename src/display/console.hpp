@@ -9,9 +9,11 @@ namespace console {
     // function declarations
     void init(); void update();
 
-    // data
+    // data and labels
     const int BUF_MAX = 10;
     inline deque<string> data;
+    inline Label* lbl = new Label("", 5, 10, pros::E_TEXT_SMALL);
+    inline GUILayer layer;
 
     // print
     inline void print(const string& str) {
@@ -19,6 +21,7 @@ namespace console {
             if (c == '\n') {
                 while (data.size() >= BUF_MAX) {data.pop_front();}
                 data.push_back("");
+                update();
             } else {
                 data.back().push_back(c);
             }
@@ -27,7 +30,7 @@ namespace console {
 
     // initialize
     inline void init() {
-
+        layer.labels = {lbl};
     }
 
     // enable and disable
@@ -40,10 +43,36 @@ namespace console {
 
     // update
     inline void update() {
-        display::update();
-        int line = 0;
-        for (const string& str: data) {
-            pros::screen::print(pros::E_TEXT_MEDIUM, 5, 5+line*5, str.c_str());
+        string str;
+        for (const string& line: data) {
+            str += line;
         }
+        lbl->text = str;
+        display::update();
     }
+
+    // ostream
+    struct OStream {
+        OStream& operator <<(int32_t x) {
+            print(to_string(x));
+            return *this;
+        }
+        OStream& operator <<(int64_t x) {
+            print(to_string(x));
+            return *this;
+        }
+        OStream& operator <<(char x) {
+            print(string()+x);
+            return *this;
+        }
+        OStream& operator <<(double x) {
+            print(to_string(x));
+            return *this;
+        }
+        OStream& operator <<(const string& obj) {
+            print(obj);
+            return *this;
+        }
+    };
+    inline OStream out;
 }

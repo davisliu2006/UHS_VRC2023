@@ -4,7 +4,7 @@
 #include "autonomous.hpp"
 #include "../display/selection.hpp"
 
-namespace vision {/*
+namespace [[deprecated]] vision {/*
     Range factor for sensor. 
     Change lower if detects too much background color
     Change higher if detects too little of the goal 
