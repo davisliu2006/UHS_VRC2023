@@ -4,4 +4,4 @@
 Developed by:
 - Davis Liu ([davisliu2006](https://github.com/davisliu2006))
 - Jacky Guo ([jgcodes2020](https://github.com/jgcodes2020))
-- Nicolas Chan ([Cw168](https://github.com/Cw168)https://github.com/Cw168)
+- Nicolas Chan ([Cw168](https://github.com/Cw168))
