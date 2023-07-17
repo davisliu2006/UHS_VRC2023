@@ -70,68 +70,6 @@ namespace auton {
         rrmotor.move_velocity(y+x);
     }
     #endif    
-    inline void turn(const int baseLeftVolt, const int baseRightVolt, double desiredAngle, vector *pCentre) {  
-        int prevErrorHeading = 0, integralHeading = 0;
-        pCentre->desiredHeading = desiredAngle;
-        double currAngle = inertial.get_heading();
-        
-        if (baseLeftVolt > baseRightVolt) {
-            if (currAngle < desiredAngle) {
-                while (currAngle < desiredAngle) { 
-                    currAngle = inertial.get_heading();         
-                    move(baseLeftVolt + pid::PID(currAngle, desiredAngle, 0.475, 0, 0, prevErrorHeading, integralHeading, 1), 
-                            baseRightVolt - pid::PID(currAngle, desiredAngle, 0.475, 0, 0, prevErrorHeading, integralHeading, 1));
-                    
-                    pros::delay(15);
-                }
-            }
-            else if (currAngle > desiredAngle) {
-                desiredAngle = desiredAngle + (360 - currAngle);
-                currAngle = 0; double prevAngle = inertial.get_heading();
-                
-                while (currAngle + 2 < desiredAngle) {
-                    if (inertial.get_heading() - prevAngle < -2) 
-                        prevAngle = inertial.get_heading();
-                    currAngle += inertial.get_heading() - prevAngle;
-                    
-                    move(baseLeftVolt + pid::PID(currAngle, desiredAngle, 0.475, 0, 0, prevErrorHeading, integralHeading, 1), 
-                            baseRightVolt - pid::PID(currAngle, desiredAngle, 0.475, 0, 0, prevErrorHeading, integralHeading, 1));
-                    
-                    prevAngle = inertial.get_heading();  
-                    pros::delay(15);
-                }
-            }
-        }   else {
-            if (0 <= currAngle && desiredAngle > currAngle) {
-                desiredAngle = -(currAngle + (360 - desiredAngle));
-                currAngle = 0; double prevAngle = inertial.get_heading();
-                
-                while (currAngle - 2 > desiredAngle) {
-                    if (inertial.get_heading() - prevAngle > 2) 
-                        prevAngle = inertial.get_heading();
-                    currAngle += inertial.get_heading() - prevAngle;
-                    
-                    move(baseLeftVolt + pid::PID(currAngle, desiredAngle, 0.5, 0, 0, prevErrorHeading, integralHeading, 1), 
-                            baseRightVolt - pid::PID(currAngle, desiredAngle, 0.5, 0, 0, prevErrorHeading, integralHeading, 1));
-                    
-                    prevAngle = inertial.get_heading();
-                    pros::delay(15);
-                }
-            }
-            else if (currAngle < 360 && currAngle > desiredAngle) {
-                desiredAngle = desiredAngle - 360;
-                currAngle -= 360;  
-                
-                while (currAngle > desiredAngle) {
-                    currAngle = inertial.get_heading() - 360;
-                    move(baseLeftVolt + pid::PID(currAngle, desiredAngle, 0.5, 0, 0, prevErrorHeading, integralHeading, 1), 
-                            baseRightVolt - pid::PID(currAngle, desiredAngle, 0.5, 0, 0, prevErrorHeading, integralHeading, 1));
-                    
-                    pros::delay(15);
-                }
-            }
-        }
-    }
 
     inline double leftMtrAvg() {
         return (flmotor.get_position()+rlmotor.get_position())/2;
@@ -139,32 +77,6 @@ namespace auton {
 
     inline double rightMtrAvg() {
         return (frmotor.get_position()+rrmotor.get_position())/2;
-    }
-
-    inline void moveDistance(const double desiredDist, const int volt, vector *pCenter, decltype(MOTOR_BRAKE_BRAKE) stopType = MOTOR_BRAKE_BRAKE) {
-        double prevLeftPos = leftMtrAvg(), prevRightPos = rightMtrAvg();   // the previous motor encoder value of each side of the drive train
-        double currDist = 0;
-
-        int prevErrorDist = 0, integralDist = 0;
-        int prevErrorHeading = 0, integralHeading = 0;
-        while (abs(currDist) < abs(desiredDist)) {
-            if (pCenter->desiredHeading > 180)
-                move(volt + pid::PID(get_heading(), pCenter->desiredHeading-360, 1.19, 0.01, 1, prevErrorHeading, integralHeading), 
-                    volt - pid::PID(get_heading(), pCenter->desiredHeading-360, 1.19, 0.01, 1, prevErrorHeading, integralHeading));
-            else
-                move(volt + pid::PID(get_heading(), pCenter->desiredHeading, 1.19, 0.01, 1, prevErrorHeading, integralHeading), 
-                    volt - pid::PID(get_heading(), pCenter->desiredHeading, 1.19, 0.01, 1, prevErrorHeading, integralHeading));
-            
-            currDist += (flmotor.get_position()-prevLeftPos + rightMtrAvg()-prevRightPos)/2 
-                        * motorToWheelRatio/360*(M_PI*wheelDiam);
-            
-            prevLeftPos = flmotor.get_position(), prevRightPos = rightMtrAvg();
-            pros::delay(7);
-        }
-        if (stopType == MOTOR_BRAKE_BRAKE)
-            move(stopType, stopType);
-        pros::delay(25);
-        pCenter->heading = inertial.get_heading();
     }
 
     // simple turn
