@@ -2,7 +2,6 @@
 
 #include "../globals.hpp"
 #include "sensing.hpp"
-#include "pid.hpp"
 
 #include <vector>
 #include <math.h>
@@ -74,7 +73,6 @@ namespace auton {
     inline double leftMtrAvg() {
         return (flmotor.get_position()+rlmotor.get_position())/2;
     }
-
     inline double rightMtrAvg() {
         return (frmotor.get_position()+rrmotor.get_position())/2;
     }
