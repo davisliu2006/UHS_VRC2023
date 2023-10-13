@@ -3,7 +3,7 @@
 #include "../globals.hpp"
 #include "core.hpp"
 
-namespace console {
+namespace [[deprecated]] console {
     using namespace display;
 
     // function declarations
@@ -35,9 +35,11 @@ namespace console {
 
     // enable and disable
     inline void enable() {
+        layer.enabled = true;
         update();
     }
     inline void disable() {
+        layer.enabled = false;
         update();
     }
 
