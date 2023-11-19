@@ -261,7 +261,7 @@ namespace auton {
 
     // initialize
     inline bool did_init = false;
-    inline bool need_sensreset = false;
+    inline bool need_sens_reset = false;
     /*
     Runs at the beginning of autonomous before any route.
     For any initializations that cannot occur during initialize().
@@ -269,10 +269,10 @@ namespace auton {
     inline void init() {
         did_init = true;
         // sensing
-        if (need_sensreset && pros::competition::is_autonomous()) {
+        if (need_sens_reset && pros::competition::is_autonomous()) {
             sens::reset();
         }
-        need_sensreset = false;
+        need_sens_reset = false;
         // indexer
         #if INDEXER_TYPE == TYPE_MTR
         indexer.move(-MTR_MAX);

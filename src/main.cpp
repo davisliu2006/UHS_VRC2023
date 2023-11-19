@@ -65,7 +65,7 @@ void initialize() {
 void disabled() {
     display::on_disable();
     sens::reset();
-    auton::need_sensreset = false;
+    auton::need_sens_reset = false;
 }
 
 /**
@@ -126,6 +126,6 @@ void opcontrol() {
     cout << "BEGIN OPCONTROL\n";
     display::on_opcontrol();
     if (!auton::did_init) {auton::init();}
-    auton::need_sensreset = true;
+    auton::need_sens_reset = true;
     opcontrol_start();
 }
