@@ -15,7 +15,7 @@ namespace display {
     inline void on_disable() {
         selection::enable();
     }
-    inline void on_opc() {
+    inline void on_opcontrol() {
         selection::disable();
     }
     inline void on_auton() {
