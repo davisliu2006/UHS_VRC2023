@@ -1,5 +1,5 @@
 # UHS_VRC2023
-3652A Code for VRC 2022-2023 (VEX Spin Up)
+UHS Robotics Team 3652A Code for VRC 2022-2023 (VEX Spin Up)
 
 Developed by:
 - Davis Liu ([davisliu2006](https://github.com/davisliu2006))
